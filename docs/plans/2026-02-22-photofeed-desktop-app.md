@@ -159,15 +159,15 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 **Files:**
 - Create: `lib/widgets/photo_fullscreen.dart`
 
-- [ ] Build full-screen overlay dialog opened by clicking a thumbnail
-- [ ] Load and display full-resolution image asynchronously (show spinner while loading)
-- [ ] Apply EXIF orientation for correct rotation
-- [ ] Display date taken and full file path in bottom overlay bar
-- [ ] Add "Open Folder" button that calls PlatformService.openFileManager
-- [ ] Add close button (top-right) and close on click outside
-- [ ] Implement keyboard navigation: left/right arrows to navigate between photos, Escape to close
-- [ ] Write widget tests for fullscreen view (renders image, keyboard navigation, close behavior)
-- [ ] Run project test suite - must pass before task 11
+- [x] Build full-screen overlay dialog opened by clicking a thumbnail
+- [x] Load and display full-resolution image asynchronously (show spinner while loading)
+- [x] Apply EXIF orientation for correct rotation
+- [x] Display date taken and full file path in bottom overlay bar
+- [x] Add "Open Folder" button that calls PlatformService.openFileManager
+- [x] Add close button (top-right) and close on click outside
+- [x] Implement keyboard navigation: left/right arrows to navigate between photos, Escape to close
+- [x] Write widget tests for fullscreen view (renders image, keyboard navigation, close behavior)
+- [x] Run project test suite - must pass before task 11
 
 ### Task 11: Date scrollbar widget
 

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../database/database.dart';
 import '../providers/feed_provider.dart';
+import '../services/platform_service.dart';
 import '../services/thumbnail_service.dart';
 import '../widgets/month_header.dart';
+import '../widgets/photo_fullscreen.dart';
 import '../widgets/photo_grid_tile.dart';
 
 class FeedScreen extends StatefulWidget {
@@ -41,6 +44,20 @@ class _FeedScreenState extends State<FeedScreen> {
         _scrollController.position.maxScrollExtent - 500) {
       context.read<FeedProvider>().loadMore();
     }
+  }
+
+  void _openFullscreen(FeedProvider feedProvider, Photo photo) {
+    final allPhotos = feedProvider.photos;
+    final globalIndex = allPhotos.indexWhere((p) => p.path == photo.path);
+    if (globalIndex < 0) return;
+
+    final platformService = context.read<PlatformService>();
+    PhotoFullscreen.show(
+      context: context,
+      photos: allPhotos,
+      initialIndex: globalIndex,
+      platformService: platformService,
+    );
   }
 
   @override
@@ -152,6 +169,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 return PhotoGridTile(
                   photo: photo,
                   thumbnailBytes: thumbBytes,
+                  onTap: () => _openFullscreen(feedProvider, photo),
                 );
               },
               childCount: grouped[yearMonth]!.length,
