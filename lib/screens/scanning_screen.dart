@@ -28,8 +28,8 @@ class _ScanningScreenState extends State<ScanningScreen> {
   }
 
   void _onScanStateChanged() {
-    final scanProvider = context.read<ScanProvider>();
-    if (scanProvider.scanComplete && mounted) {
+    if (!mounted) return;
+    if (_scanProvider.scanComplete) {
       _navigateToFeed();
     }
   }
@@ -42,8 +42,7 @@ class _ScanningScreenState extends State<ScanningScreen> {
   }
 
   void _onCancel() {
-    final scanProvider = context.read<ScanProvider>();
-    scanProvider.stopScan();
+    _scanProvider.stopScan();
     _navigateToFeed();
   }
 
