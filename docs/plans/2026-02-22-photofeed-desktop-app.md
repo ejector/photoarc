@@ -126,13 +126,13 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 **Files:**
 - Create: `lib/screens/scanning_screen.dart`
 
-- [ ] Build full-screen centered card with animated progress bar
-- [ ] Display live counter of photos found and current directory being scanned
-- [ ] Add cancel button that stops isolate and navigates to feed with partial results
-- [ ] Auto-navigate to feed screen on scan completion
-- [ ] Wire to ScanProvider for real-time progress updates
-- [ ] Write widget tests for scanning screen (progress display, cancel button)
-- [ ] Run project test suite - must pass before task 9
+- [x] Build full-screen centered card with animated progress bar
+- [x] Display live counter of photos found and current directory being scanned
+- [x] Add cancel button that stops isolate and navigates to feed with partial results
+- [x] Auto-navigate to feed screen on scan completion
+- [x] Wire to ScanProvider for real-time progress updates
+- [x] Write widget tests for scanning screen (progress display, cancel button)
+- [x] Run project test suite - must pass before task 9
 
 ### Task 9: Feed screen - grid and date grouping
 
