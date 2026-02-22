@@ -100,11 +100,11 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 - Create: `lib/providers/scan_provider.dart`
 - Create: `lib/providers/feed_provider.dart`
 
-- [ ] Implement ScanProvider: manages selected folders list, scan running/stopped state, progress (photos found, current directory), starts/stops PhotoScanner isolate, persists folder selections to scan_settings table
-- [ ] Implement FeedProvider: manages photo list (paginated, 200 per page), current sort order (newest/oldest), loads more on scroll, groups photos by year_month, persists sort preference to app_settings
-- [ ] Wire providers into MultiProvider in main.dart
-- [ ] Write tests for ScanProvider state transitions and FeedProvider pagination/sorting logic
-- [ ] Run project test suite - must pass before task 7
+- [x] Implement ScanProvider: manages selected folders list, scan running/stopped state, progress (photos found, current directory), starts/stops PhotoScanner isolate, persists folder selections to scan_settings table
+- [x] Implement FeedProvider: manages photo list (paginated, 200 per page), current sort order (newest/oldest), loads more on scroll, groups photos by year_month, persists sort preference to app_settings
+- [x] Wire providers into MultiProvider in main.dart
+- [x] Write tests for ScanProvider state transitions and FeedProvider pagination/sorting logic
+- [x] Run project test suite - must pass before task 7
 
 ### Task 7: Folder selection screen
 
