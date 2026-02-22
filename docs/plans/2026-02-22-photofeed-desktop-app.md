@@ -87,12 +87,12 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 - Create: `lib/services/thumbnail_service.dart`
 - Create: `lib/services/thumbnail_cache.dart`
 
-- [ ] Implement disk-tier cache: look up thumbnail_path from database, verify file exists on disk
-- [ ] Implement in-memory LRU cache (~500 entries) for currently visible tiles
-- [ ] Implement getThumbnail(photo) method: check memory cache -> check disk -> return null (regenerate later)
-- [ ] Implement cache eviction and size management
-- [ ] Write tests for LRU cache behavior (insert, evict, hit/miss), disk cache lookup
-- [ ] Run project test suite - must pass before task 6
+- [x] Implement disk-tier cache: look up thumbnail_path from database, verify file exists on disk
+- [x] Implement in-memory LRU cache (~500 entries) for currently visible tiles
+- [x] Implement getThumbnail(photo) method: check memory cache -> check disk -> return null (regenerate later)
+- [x] Implement cache eviction and size management
+- [x] Write tests for LRU cache behavior (insert, evict, hit/miss), disk cache lookup
+- [x] Run project test suite - must pass before task 6
 
 ### Task 6: Providers (state management)
 
