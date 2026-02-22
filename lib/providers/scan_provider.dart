@@ -90,7 +90,7 @@ class ScanProvider extends ChangeNotifier {
   int get totalPhotos => _totalPhotos;
 
   StreamSubscription<ScanProgress>? _scanSubscription;
-  Future<void>? _pendingBatchInsert;
+  Future<void> _pendingBatchInsert = Future.value();
 
   /// Starts a scan of the selected folders.
   Future<void> startScan() async {
@@ -138,23 +138,27 @@ class ScanProvider extends ChangeNotifier {
         _currentDirectory = directory;
         notifyListeners();
       case BatchReadyProgress(:final photos):
-        _pendingBatchInsert = _insertBatch(photos).catchError((error) {
+        _pendingBatchInsert = _pendingBatchInsert
+            .then((_) => _insertBatch(photos))
+            .catchError((error) {
           debugPrint('Failed to insert photo batch: $error');
         });
       case ScanCompleteProgress(:final totalPhotos):
-        _finalizeScan(totalPhotos);
+        _finalizeScan(totalPhotos).catchError((error) {
+          debugPrint('Failed to finalize scan: $error');
+          _isScanning = false;
+          notifyListeners();
+        });
       case ScanErrorProgress():
         break; // Non-fatal errors are ignored for now
     }
   }
 
   Future<void> _finalizeScan(int totalPhotos) async {
-    // Wait for any pending batch insert to complete before marking scan done,
-    // otherwise the feed screen may query the DB before the last batch is committed.
-    if (_pendingBatchInsert != null) {
-      await _pendingBatchInsert;
-      _pendingBatchInsert = null;
-    }
+    // Wait for all chained batch inserts to complete before marking scan done,
+    // otherwise the feed screen may query the DB before batches are committed.
+    await _pendingBatchInsert;
+    _pendingBatchInsert = Future.value();
     _totalPhotos = totalPhotos;
     _scanComplete = true;
     _isScanning = false;
@@ -182,10 +186,12 @@ class ScanProvider extends ChangeNotifier {
   }
 
   /// Stops the currently running scan.
-  void stopScan() {
+  Future<void> stopScan() async {
     _scanner.stop();
     _scanSubscription?.cancel();
     _scanSubscription = null;
+    await _pendingBatchInsert;
+    _pendingBatchInsert = Future.value();
     _isScanning = false;
     notifyListeners();
   }

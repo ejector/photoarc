@@ -238,7 +238,7 @@ void main() {
       provider.setSelectedFolders(['/photos']);
       await provider.startScan();
 
-      provider.stopScan();
+      await provider.stopScan();
 
       expect(provider.isScanning, isFalse);
       expect(fakeScanner.stopCalled, isTrue);

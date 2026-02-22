@@ -361,7 +361,7 @@ Future<bool> _tryDcrawExtract(String rawPath, String outputPath) async {
     // dcraw -e -c outputs the embedded JPEG to stdout
     final result = await Process.run(
       'dcraw',
-      ['-e', '-c', rawPath],
+      ['-e', '-c', '--', rawPath],
       stdoutEncoding: null,
     );
     if (result.exitCode == 0) {
@@ -389,7 +389,7 @@ Future<bool> _tryExiftoolExtract(String rawPath, String outputPath) async {
   try {
     final result = await Process.run(
       'exiftool',
-      ['-b', '-PreviewImage', rawPath],
+      ['-b', '-PreviewImage', '--', rawPath],
       stdoutEncoding: null,
     );
     if (result.exitCode == 0) {
@@ -469,7 +469,7 @@ Future<bool> _trySipsConvert(String inputPath, String outputPath) async {
   try {
     final result = await Process.run(
       'sips',
-      ['-s', 'format', 'jpeg', inputPath, '--out', outputPath],
+      ['-s', 'format', 'jpeg', '--', inputPath, '--out', outputPath],
     );
     return result.exitCode == 0 && File(outputPath).existsSync();
   } on ProcessException {
