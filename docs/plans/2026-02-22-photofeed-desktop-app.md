@@ -112,14 +112,14 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 - Create: `lib/screens/folder_selection_screen.dart`
 - Create: `lib/widgets/folder_list_tile.dart`
 
-- [ ] Build screen showing available drives/volumes with checkboxes (all selected by default)
-- [ ] Highlight default photo directories (Pictures, Downloads)
-- [ ] Add folder picker button to add custom folders
-- [ ] Add prominent "Scan" button at bottom
-- [ ] Implement navigation logic: first launch -> this screen; subsequent -> feed screen
-- [ ] Restore saved folder selections on subsequent visits
-- [ ] Write widget tests for folder selection screen (renders drives, toggle checkboxes, scan button)
-- [ ] Run project test suite - must pass before task 8
+- [x] Build screen showing available drives/volumes with checkboxes (all selected by default)
+- [x] Highlight default photo directories (Pictures, Downloads)
+- [x] Add folder picker button to add custom folders
+- [x] Add prominent "Scan" button at bottom
+- [x] Implement navigation logic: first launch -> this screen; subsequent -> feed screen
+- [x] Restore saved folder selections on subsequent visits
+- [x] Write widget tests for folder selection screen (renders drives, toggle checkboxes, scan button)
+- [x] Run project test suite - must pass before task 8
 
 ### Task 8: Scanning screen
 
