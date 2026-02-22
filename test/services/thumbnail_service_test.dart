@@ -22,49 +22,59 @@ void main() {
       );
     });
 
-    test('returns null when no thumbnail in memory or disk', () {
-      final result = service.getThumbnail(
+    test('returns null when no thumbnail in memory or disk', () async {
+      final result = await service.loadThumbnail(
         photoPath: '/photos/img.jpg',
         thumbnailPath: '/cache/thumb.jpg',
       );
       expect(result, isNull);
     });
 
-    test('returns null when thumbnailPath is null', () {
-      final result = service.getThumbnail(
+    test('returns null when thumbnailPath is null', () async {
+      final result = await service.loadThumbnail(
         photoPath: '/photos/img.jpg',
         thumbnailPath: null,
       );
       expect(result, isNull);
     });
 
-    test('returns null when thumbnailPath is empty', () {
-      final result = service.getThumbnail(
+    test('returns null when thumbnailPath is empty', () async {
+      final result = await service.loadThumbnail(
         photoPath: '/photos/img.jpg',
         thumbnailPath: '',
       );
       expect(result, isNull);
     });
 
-    test('returns from memory cache on hit', () {
+    test('returns from memory cache on hit', () async {
       final data = _bytes([1, 2, 3]);
       memoryCache.put('/photos/img.jpg', data);
 
-      final result = service.getThumbnail(
+      final result = await service.loadThumbnail(
         photoPath: '/photos/img.jpg',
         thumbnailPath: '/cache/thumb.jpg',
       );
       expect(result, equals(data));
     });
 
-    test('putInMemory stores data retrievable by getThumbnail', () {
+    test('getFromMemory returns cached data', () {
+      final data = _bytes([1, 2, 3]);
+      memoryCache.put('/photos/img.jpg', data);
+
+      final result = service.getFromMemory('/photos/img.jpg');
+      expect(result, equals(data));
+    });
+
+    test('getFromMemory returns null on cache miss', () {
+      final result = service.getFromMemory('/photos/img.jpg');
+      expect(result, isNull);
+    });
+
+    test('putInMemory stores data retrievable by getFromMemory', () {
       final data = _bytes([4, 5, 6]);
       service.putInMemory('/photos/img.jpg', data);
 
-      final result = service.getThumbnail(
-        photoPath: '/photos/img.jpg',
-        thumbnailPath: null,
-      );
+      final result = service.getFromMemory('/photos/img.jpg');
       expect(result, equals(data));
     });
 
@@ -106,7 +116,7 @@ void main() {
         }
       });
 
-      test('loads from disk when not in memory and file exists', () {
+      test('loads from disk when not in memory and file exists', () async {
         final thumbPath = '${tempDir.path}/thumb.jpg';
         final thumbData = _bytes([10, 20, 30, 40, 50]);
         File(thumbPath).writeAsBytesSync(thumbData);
@@ -114,14 +124,14 @@ void main() {
         // Use service without mock fileExistsSync to hit real filesystem
         final realService = ThumbnailService(memoryCache: ThumbnailCache());
 
-        final result = realService.getThumbnail(
+        final result = await realService.loadThumbnail(
           photoPath: '/photos/test.jpg',
           thumbnailPath: thumbPath,
         );
         expect(result, equals(thumbData));
       });
 
-      test('promotes disk-loaded thumbnail into memory cache', () {
+      test('promotes disk-loaded thumbnail into memory cache', () async {
         final thumbPath = '${tempDir.path}/thumb2.jpg';
         final thumbData = _bytes([11, 22, 33]);
         File(thumbPath).writeAsBytesSync(thumbData);
@@ -130,7 +140,7 @@ void main() {
         final realService = ThumbnailService(memoryCache: sharedCache);
 
         // First call loads from disk
-        realService.getThumbnail(
+        await realService.loadThumbnail(
           photoPath: '/photos/test.jpg',
           thumbnailPath: thumbPath,
         );
@@ -139,17 +149,17 @@ void main() {
         expect(sharedCache.get('/photos/test.jpg'), equals(thumbData));
 
         // Second call should hit memory (even with bogus disk path)
-        final result = realService.getThumbnail(
+        final result = await realService.loadThumbnail(
           photoPath: '/photos/test.jpg',
           thumbnailPath: '/nonexistent/path.jpg',
         );
         expect(result, equals(thumbData));
       });
 
-      test('returns null when disk file does not exist', () {
+      test('returns null when disk file does not exist', () async {
         final realService = ThumbnailService(memoryCache: ThumbnailCache());
 
-        final result = realService.getThumbnail(
+        final result = await realService.loadThumbnail(
           photoPath: '/photos/test.jpg',
           thumbnailPath: '${tempDir.path}/nonexistent.jpg',
         );

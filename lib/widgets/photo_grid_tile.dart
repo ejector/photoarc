@@ -4,34 +4,82 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../database/database.dart';
+import '../services/thumbnail_service.dart';
 import 'exif_utils.dart';
 
-class PhotoGridTile extends StatelessWidget {
+class PhotoGridTile extends StatefulWidget {
   final Photo photo;
-  final Uint8List? thumbnailBytes;
+  final ThumbnailService thumbnailService;
   final VoidCallback? onTap;
 
   const PhotoGridTile({
     super.key,
     required this.photo,
-    this.thumbnailBytes,
+    required this.thumbnailService,
     this.onTap,
   });
 
+  @override
+  State<PhotoGridTile> createState() => _PhotoGridTileState();
+}
+
+class _PhotoGridTileState extends State<PhotoGridTile> {
+  Uint8List? _thumbnailBytes;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadThumbnail();
+  }
+
+  @override
+  void didUpdateWidget(PhotoGridTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.photo.path != widget.photo.path) {
+      _loadThumbnail();
+    }
+  }
+
+  void _loadThumbnail() {
+    // Try memory cache first (synchronous, no jank)
+    final cached = widget.thumbnailService.getFromMemory(widget.photo.path);
+    if (cached != null) {
+      _thumbnailBytes = cached;
+      return;
+    }
+
+    // Load from disk asynchronously
+    _loading = true;
+    widget.thumbnailService
+        .loadThumbnail(
+          photoPath: widget.photo.path,
+          thumbnailPath: widget.photo.thumbnailPath,
+        )
+        .then((bytes) {
+      if (mounted) {
+        setState(() {
+          _thumbnailBytes = bytes;
+          _loading = false;
+        });
+      }
+    });
+  }
+
   String get _tooltipText {
-    final date = DateFormat.yMMMd().add_jm().format(photo.dateTaken);
-    return '$date\n${photo.directory}';
+    final date = DateFormat.yMMMd().add_jm().format(widget.photo.dateTaken);
+    return '$date\n${widget.photo.directory}';
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final angle = exifRotationAngle(photo.orientation);
+    final angle = exifRotationAngle(widget.photo.orientation);
 
     Widget imageWidget;
-    if (thumbnailBytes != null) {
+    if (_thumbnailBytes != null) {
       imageWidget = Image.memory(
-        thumbnailBytes!,
+        _thumbnailBytes!,
         fit: BoxFit.cover,
         gaplessPlayback: true,
       );
@@ -42,11 +90,20 @@ class PhotoGridTile extends StatelessWidget {
       imageWidget = Container(
         color: theme.colorScheme.surfaceContainerHighest,
         child: Center(
-          child: Icon(
-            Icons.photo_outlined,
-            color: theme.colorScheme.onSurfaceVariant,
-            size: 32,
-          ),
+          child: _loading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                )
+              : Icon(
+                  Icons.photo_outlined,
+                  color: theme.colorScheme.onSurfaceVariant,
+                  size: 32,
+                ),
         ),
       );
     }
@@ -55,7 +112,7 @@ class PhotoGridTile extends StatelessWidget {
       message: _tooltipText,
       waitDuration: const Duration(milliseconds: 500),
       child: GestureDetector(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(4),
           child: imageWidget,

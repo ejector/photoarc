@@ -145,7 +145,7 @@ class PlatformService {
   }
 
   static Future<void> _macOSOpenFileManager(String path) async {
-    await Process.run('open', ['-R', path]);
+    await Process.run('open', ['-R', '--', path]);
   }
 
   // -- Windows implementations --
@@ -173,7 +173,7 @@ class PlatformService {
   }
 
   static Future<void> _windowsOpenFileManager(String path) async {
-    await Process.run('explorer.exe', ['/select,', path]);
+    await Process.run('explorer.exe', ['/select,$path']);
   }
 
   // -- Linux implementations --
@@ -225,7 +225,7 @@ class PlatformService {
 
   static Future<void> _linuxOpenFileManager(String path) async {
     final directory = File(path).parent.path;
-    await Process.run('xdg-open', [directory]);
+    await Process.run('xdg-open', ['--', directory]);
   }
 
   // -- Shared implementations --

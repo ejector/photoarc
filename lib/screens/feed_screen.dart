@@ -171,13 +171,9 @@ class _FeedScreenState extends State<FeedScreen> {
                 (context, index) {
                   final photos = grouped[yearMonth]!;
                   final photo = photos[index];
-                  final thumbBytes = _thumbnailService.getThumbnail(
-                    photoPath: photo.path,
-                    thumbnailPath: photo.thumbnailPath,
-                  );
                   return PhotoGridTile(
                     photo: photo,
-                    thumbnailBytes: thumbBytes,
+                    thumbnailService: _thumbnailService,
                     onTap: () => _openFullscreen(feedProvider, photo),
                   );
                 },

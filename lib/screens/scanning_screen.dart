@@ -13,6 +13,7 @@ class ScanningScreen extends StatefulWidget {
 
 class _ScanningScreenState extends State<ScanningScreen> {
   late final ScanProvider _scanProvider;
+  bool _hasNavigated = false;
 
   @override
   void initState() {
@@ -28,13 +29,15 @@ class _ScanningScreenState extends State<ScanningScreen> {
   }
 
   void _onScanStateChanged() {
-    if (!mounted) return;
+    if (!mounted || _hasNavigated) return;
     if (_scanProvider.scanComplete) {
       _navigateToFeed();
     }
   }
 
   Future<void> _navigateToFeed() async {
+    if (_hasNavigated) return;
+    _hasNavigated = true;
     final feedProvider = context.read<FeedProvider>();
     await feedProvider.initialize();
     if (!mounted) return;
