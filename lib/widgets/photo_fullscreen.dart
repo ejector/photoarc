@@ -91,8 +91,6 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
   Widget _buildImage() {
     final photo = _currentPhoto;
     final file = File(photo.path);
-    final angle = exifRotationAngle(photo.orientation);
-
     Widget image = Image.file(
       file,
       fit: BoxFit.contain,
@@ -119,9 +117,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
       },
     );
 
-    if (angle != 0) {
-      image = Transform.rotate(angle: angle, child: image);
-    }
+    image = applyExifTransform(image, photo.orientation);
 
     return image;
   }

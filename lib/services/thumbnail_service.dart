@@ -12,13 +12,13 @@ import 'thumbnail_cache.dart';
 /// and returns null if the thumbnail is unavailable.
 class ThumbnailService {
   final ThumbnailCache _memoryCache;
-  final bool Function(String path)? _fileExistsSync;
+  final bool Function(String path)? _fileExistsSyncForTest;
 
   ThumbnailService({
     ThumbnailCache? memoryCache,
     bool Function(String path)? fileExistsSync,
   })  : _memoryCache = memoryCache ?? ThumbnailCache(),
-        _fileExistsSync = fileExistsSync;
+        _fileExistsSyncForTest = fileExistsSync;
 
   /// Returns thumbnail bytes from the memory cache (synchronous, non-blocking).
   ///
@@ -42,11 +42,11 @@ class ThumbnailService {
       return cached;
     }
 
-    // Tier 2: Check disk cache (async to avoid blocking UI)
+    // Tier 2: Check disk cache
     if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
-      final exists = _fileExistsSync != null
-          ? _fileExistsSync(thumbnailPath)
-          : File(thumbnailPath).existsSync();
+      final exists = _fileExistsSyncForTest != null
+          ? _fileExistsSyncForTest(thumbnailPath)
+          : await File(thumbnailPath).exists();
 
       if (exists) {
         final bytes = await File(thumbnailPath).readAsBytes();

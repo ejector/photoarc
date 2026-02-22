@@ -123,8 +123,13 @@ class ScanProvider extends ChangeNotifier {
         notifyListeners();
       },
       onDone: () {
-        _isScanning = false;
-        notifyListeners();
+        // Only update state if _finalizeScan hasn't already handled it.
+        // The stream closes when ScanCompleteProgress is received, but
+        // _finalizeScan may still be awaiting pending batch inserts.
+        if (!_scanComplete) {
+          _isScanning = false;
+          notifyListeners();
+        }
       },
     );
   }

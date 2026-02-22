@@ -74,8 +74,6 @@ class _PhotoGridTileState extends State<PhotoGridTile> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final angle = exifRotationAngle(widget.photo.orientation);
-
     Widget imageWidget;
     if (_thumbnailBytes != null) {
       imageWidget = Image.memory(
@@ -83,9 +81,8 @@ class _PhotoGridTileState extends State<PhotoGridTile> {
         fit: BoxFit.cover,
         gaplessPlayback: true,
       );
-      if (angle != 0) {
-        imageWidget = Transform.rotate(angle: angle, child: imageWidget);
-      }
+      imageWidget =
+          applyExifTransform(imageWidget, widget.photo.orientation);
     } else {
       imageWidget = Container(
         color: theme.colorScheme.surfaceContainerHighest,
