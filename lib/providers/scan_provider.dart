@@ -134,7 +134,9 @@ class ScanProvider extends ChangeNotifier {
         _currentDirectory = directory;
         notifyListeners();
       case BatchReadyProgress(:final photos):
-        _insertBatch(photos);
+        _insertBatch(photos).catchError((error) {
+          debugPrint('Failed to insert photo batch: $error');
+        });
       case ScanCompleteProgress(:final totalPhotos):
         _totalPhotos = totalPhotos;
         _scanComplete = true;

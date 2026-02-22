@@ -673,9 +673,14 @@ class PhotoScanner {
       }
     });
 
-    // Spawn isolate
+    // Spawn isolate and handle the case where stop() is called before spawn completes
     Isolate.spawn(_scannerIsolateEntry, config).then((isolate) {
-      _isolate = isolate;
+      if (_isRunning) {
+        _isolate = isolate;
+      } else {
+        // stop() was called before spawn completed - kill the isolate immediately
+        isolate.kill(priority: Isolate.immediate);
+      }
     }).catchError((error) {
       controller.addError(error);
       _cleanup();

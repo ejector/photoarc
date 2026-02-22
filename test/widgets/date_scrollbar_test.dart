@@ -79,22 +79,24 @@ void main() {
         ),
       ));
 
-      // Initially no date label visible
-      expect(find.byType(AnimatedOpacity), findsNothing);
+      // Initially label has zero opacity
+      final opacityFinder = find.byType(AnimatedOpacity);
+      expect(opacityFinder, findsOneWidget);
+      expect(tester.widget<AnimatedOpacity>(opacityFinder).opacity, 0.0);
 
       // Scroll to trigger label
       controller.jumpTo(200);
       await tester.pump();
 
-      // Date label should now be visible
-      expect(find.byType(AnimatedOpacity), findsOneWidget);
+      // Date label should now be visible (opacity 1.0)
+      expect(tester.widget<AnimatedOpacity>(opacityFinder).opacity, 1.0);
 
       // Wait for hide timer (800ms) + animation
       await tester.pump(const Duration(milliseconds: 900));
       await tester.pump(const Duration(milliseconds: 200));
 
-      // Label should be hidden
-      expect(find.byType(AnimatedOpacity), findsNothing);
+      // Label should be hidden (opacity 0.0)
+      expect(tester.widget<AnimatedOpacity>(opacityFinder).opacity, 0.0);
     });
 
     testWidgets('displays correct date for scroll position', (tester) async {
@@ -148,8 +150,10 @@ void main() {
       controller.jumpTo(100);
       await tester.pump();
 
-      // No date label when yearMonths is empty
-      expect(find.byType(AnimatedOpacity), findsNothing);
+      // Date label remains hidden (opacity 0.0) when yearMonths is empty
+      final opacityFinder = find.byType(AnimatedOpacity);
+      expect(opacityFinder, findsOneWidget);
+      expect(tester.widget<AnimatedOpacity>(opacityFinder).opacity, 0.0);
     });
 
     testWidgets('scroll to end shows last year-month', (tester) async {

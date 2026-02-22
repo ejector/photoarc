@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 import '../providers/scan_provider.dart';
@@ -127,7 +128,7 @@ class _FolderSelectionScreenState extends State<FolderSelectionScreen> {
                             ..._defaultDirs.map((dir) => FolderListTile(
                                   key: ValueKey('default_$dir'),
                                   path: dir,
-                                  label: dir.split('/').last,
+                                  label: p.basename(dir),
                                   isSelected: selectedFolders.contains(dir),
                                   isDefault: true,
                                   onChanged: (_) =>
@@ -167,7 +168,7 @@ class _FolderSelectionScreenState extends State<FolderSelectionScreen> {
                             ..._customFolders.map((folder) => FolderListTile(
                                   key: ValueKey('custom_$folder'),
                                   path: folder,
-                                  label: folder.split('/').last,
+                                  label: p.basename(folder),
                                   isSelected: selectedFolders.contains(folder),
                                   onChanged: (_) =>
                                       scanProvider.toggleFolder(folder),

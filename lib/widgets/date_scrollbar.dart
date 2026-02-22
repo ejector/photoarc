@@ -46,19 +46,22 @@ class DateScrollbarState extends State<DateScrollbar> {
             interactive: true,
             child: widget.child,
           ),
-          if (_showLabel && _currentYearMonth.isNotEmpty)
-            Positioned(
-              right: 24,
-              top: 0,
-              bottom: 0,
-              child: Center(
+          Positioned(
+            right: 24,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: IgnorePointer(
                 child: AnimatedOpacity(
-                  opacity: _showLabel ? 1.0 : 0.0,
+                  opacity: (_showLabel && _currentYearMonth.isNotEmpty)
+                      ? 1.0
+                      : 0.0,
                   duration: const Duration(milliseconds: 200),
                   child: _DateLabel(yearMonth: _currentYearMonth),
                 ),
               ),
             ),
+          ),
         ],
       ),
     );

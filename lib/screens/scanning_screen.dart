@@ -12,21 +12,18 @@ class ScanningScreen extends StatefulWidget {
 }
 
 class _ScanningScreenState extends State<ScanningScreen> {
+  late final ScanProvider _scanProvider;
+
   @override
   void initState() {
     super.initState();
-    final scanProvider = context.read<ScanProvider>();
-    scanProvider.addListener(_onScanStateChanged);
+    _scanProvider = context.read<ScanProvider>();
+    _scanProvider.addListener(_onScanStateChanged);
   }
 
   @override
   void dispose() {
-    // Remove listener safely - provider may already be disposed
-    try {
-      context.read<ScanProvider>().removeListener(_onScanStateChanged);
-    } catch (_) {
-      // Provider may not be available during dispose
-    }
+    _scanProvider.removeListener(_onScanStateChanged);
     super.dispose();
   }
 
