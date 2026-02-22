@@ -55,26 +55,6 @@ PlatformService _fakePlatformService() {
   );
 }
 
-PhotosCompanion _makePhoto({
-  required String path,
-  DateTime? dateTaken,
-  String yearMonth = '2024-01',
-}) {
-  final dt = dateTaken ?? DateTime(2024, 1, 15);
-  return PhotosCompanion(
-    path: Value(path),
-    filename: Value('photo.jpg'),
-    directory: Value('/photos'),
-    dateTaken: Value(dt),
-    fileSize: const Value(1024),
-    format: const Value('jpg'),
-    yearMonth: Value(yearMonth),
-    orientation: const Value(1),
-    isValid: const Value(true),
-    fileModifiedAt: Value(dt),
-  );
-}
-
 void main() {
   late AppDatabase db;
   late FakePhotoScanner fakeScanner;

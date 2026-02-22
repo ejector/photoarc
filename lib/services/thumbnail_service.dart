@@ -39,7 +39,7 @@ class ThumbnailService {
     // Tier 2: Check disk cache
     if (thumbnailPath != null && thumbnailPath.isNotEmpty) {
       final exists = _fileExistsSync != null
-          ? _fileExistsSync!(thumbnailPath)
+          ? _fileExistsSync(thumbnailPath)
           : File(thumbnailPath).existsSync();
 
       if (exists) {

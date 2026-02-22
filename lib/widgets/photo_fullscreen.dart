@@ -109,7 +109,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
     Widget image = Image.file(
       file,
       fit: BoxFit.contain,
-      errorBuilder: (_, __, ___) => const Center(
+      errorBuilder: (_, _, _) => const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

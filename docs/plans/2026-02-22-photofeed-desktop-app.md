@@ -195,13 +195,13 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 
 ### Task 13: Verify acceptance criteria
 
-- [ ] Manual test: launch app fresh, select folders, scan, browse feed, open fullscreen, navigate with keyboard, open folder in file manager
-- [ ] Manual test: re-launch app, verify it goes directly to feed with persisted data
-- [ ] Manual test: re-scan with incremental scan (should be fast for unchanged files)
-- [ ] Manual test: scroll through large collection, verify smooth performance and date scrollbar
-- [ ] Run full test suite
-- [ ] Run linter (flutter analyze)
-- [ ] Verify test coverage meets 80%+
+- [x] Manual test: launch app fresh, select folders, scan, browse feed, open fullscreen, navigate with keyboard, open folder in file manager
+- [x] Manual test: re-launch app, verify it goes directly to feed with persisted data
+- [x] Manual test: re-scan with incremental scan (should be fast for unchanged files)
+- [x] Manual test: scroll through large collection, verify smooth performance and date scrollbar
+- [x] Run full test suite
+- [x] Run linter (flutter analyze)
+- [x] Verify test coverage meets 80%+
 
 ### Task 14: Update documentation
 
