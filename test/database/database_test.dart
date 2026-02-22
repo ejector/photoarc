@@ -164,23 +164,6 @@ void main() {
     });
   });
 
-  group('File modified at', () {
-    test('getFileModifiedAt returns date for existing photo', () async {
-      final modDate = DateTime(2024, 2, 10);
-      await db.insertPhotoBatch([
-        makePhoto(path: '/photos/x.jpg', fileModifiedAt: modDate),
-      ]);
-
-      final result = await db.getFileModifiedAt('/photos/x.jpg');
-      expect(result, modDate);
-    });
-
-    test('getFileModifiedAt returns null for unknown path', () async {
-      final result = await db.getFileModifiedAt('/nonexistent.jpg');
-      expect(result, isNull);
-    });
-  });
-
   group('Valid photo count', () {
     test('getValidPhotoCount counts only valid photos', () async {
       await db.insertPhotoBatch([

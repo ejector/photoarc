@@ -508,12 +508,12 @@ Future<String?> generateSvgPlaceholder(
     // Create a 200x200 placeholder image with a light gray background
     // and "SVG" text indicator
     final image = img.Image(width: 200, height: 200);
-    img.fill(image, color: img.ColorFloat16.rgb(220, 220, 230));
+    img.fill(image, color: img.ColorRgb8(220, 220, 230));
 
     // Draw a simple border
     img.drawRect(image,
       x1: 10, y1: 10, x2: 189, y2: 189,
-      color: img.ColorFloat16.rgb(150, 150, 170),
+      color: img.ColorRgb8(150, 150, 170),
       thickness: 2,
     );
 
@@ -630,6 +630,7 @@ Future<void> _scannerIsolateEntry(ScanConfig config) async {
 class PhotoScanner {
   Isolate? _isolate;
   ReceivePort? _receivePort;
+  StreamController<ScanProgress>? _controller;
   bool _isRunning = false;
 
   bool get isRunning => _isRunning;
@@ -652,6 +653,7 @@ class PhotoScanner {
     _receivePort = receivePort;
 
     final controller = StreamController<ScanProgress>();
+    _controller = controller;
 
     final config = ScanConfig(
       directories: directories,
@@ -695,6 +697,10 @@ class PhotoScanner {
     _isolate = null;
     _receivePort?.close();
     _receivePort = null;
+    if (_controller != null && !_controller!.isClosed) {
+      _controller!.close();
+    }
+    _controller = null;
     _isRunning = false;
   }
 }

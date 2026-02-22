@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../database/database.dart';
 import '../services/platform_service.dart';
+import 'exif_utils.dart';
 
 class PhotoFullscreen extends StatefulWidget {
   final List<Photo> photos;
@@ -88,23 +88,10 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
     return KeyEventResult.ignored;
   }
 
-  double _rotationAngle(int orientation) {
-    switch (orientation) {
-      case 6:
-        return math.pi / 2;
-      case 3:
-        return math.pi;
-      case 8:
-        return -math.pi / 2;
-      default:
-        return 0;
-    }
-  }
-
   Widget _buildImage() {
     final photo = _currentPhoto;
     final file = File(photo.path);
-    final angle = _rotationAngle(photo.orientation);
+    final angle = exifRotationAngle(photo.orientation);
 
     Widget image = Image.file(
       file,

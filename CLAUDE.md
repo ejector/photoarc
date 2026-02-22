@@ -41,7 +41,7 @@ flutter analyze                                          # Lint
 
 - Tests use flutter_test with mocked dependencies
 - Database tests use in-memory drift databases
-- Widget tests use ProviderScope with mock providers
+- Widget tests use MultiProvider/ChangeNotifierProvider with mock providers
 - Coverage target: 80%+
 
 ## Important Notes

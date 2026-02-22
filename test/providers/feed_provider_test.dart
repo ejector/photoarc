@@ -123,14 +123,6 @@ void main() {
       expect(provider.photos[0].path, '/old.jpg'); // oldest first
     });
 
-    test('setSortOrder does nothing when value unchanged', () async {
-      var notifyCount = 0;
-      provider.addListener(() => notifyCount++);
-
-      await provider.setSortOrder(newestFirst: true); // Already true
-      expect(notifyCount, 0);
-    });
-
     test('sort preference is persisted', () async {
       await provider.toggleSortOrder(); // Now false
       expect(provider.newestFirst, isFalse);

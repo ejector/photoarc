@@ -88,14 +88,6 @@ class FeedProvider extends ChangeNotifier {
     await refresh();
   }
 
-  /// Sets sort order explicitly and reloads if changed.
-  Future<void> setSortOrder({required bool newestFirst}) async {
-    if (_newestFirst == newestFirst) return;
-    _newestFirst = newestFirst;
-    await _saveSortPreference();
-    await refresh();
-  }
-
   // ── Year-month helpers ──────────────────────────────────────────────────
 
   Future<void> _loadYearMonths() async {

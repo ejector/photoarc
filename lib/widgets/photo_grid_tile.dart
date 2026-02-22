@@ -1,10 +1,10 @@
-import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../database/database.dart';
+import 'exif_utils.dart';
 
 class PhotoGridTile extends StatelessWidget {
   final Photo photo;
@@ -18,19 +18,6 @@ class PhotoGridTile extends StatelessWidget {
     this.onTap,
   });
 
-  double _rotationAngle(int orientation) {
-    switch (orientation) {
-      case 6:
-        return math.pi / 2;
-      case 3:
-        return math.pi;
-      case 8:
-        return -math.pi / 2;
-      default:
-        return 0;
-    }
-  }
-
   String get _tooltipText {
     final date = DateFormat.yMMMd().add_jm().format(photo.dateTaken);
     return '$date\n${photo.directory}';
@@ -39,7 +26,7 @@ class PhotoGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final angle = _rotationAngle(photo.orientation);
+    final angle = exifRotationAngle(photo.orientation);
 
     Widget imageWidget;
     if (thumbnailBytes != null) {

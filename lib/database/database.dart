@@ -76,9 +76,8 @@ class AppDatabase extends _$AppDatabase {
           await customStatement(
             'CREATE INDEX IF NOT EXISTS idx_photos_year_month ON photos (year_month)',
           );
-          await customStatement(
-            'CREATE INDEX IF NOT EXISTS idx_photos_path ON photos (path)',
-          );
+          // Note: idx_photos_path is not needed because path column has .unique()
+          // which already creates a unique index.
         },
       );
 
@@ -127,13 +126,6 @@ class AppDatabase extends _$AppDatabase {
           (t) => t.yearMonth.equals(yearMonth) & t.isValid.equals(true))
       ..orderBy([(t) => OrderingTerm.desc(t.dateTaken)]);
     return query.get();
-  }
-
-  /// Returns the [fileModifiedAt] for a photo at [filePath], or null if not in DB.
-  Future<DateTime?> getFileModifiedAt(String filePath) async {
-    final query = select(photos)..where((t) => t.path.equals(filePath));
-    final row = await query.getSingleOrNull();
-    return row?.fileModifiedAt;
   }
 
   /// Returns the total count of valid photos.

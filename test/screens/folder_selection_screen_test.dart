@@ -243,39 +243,4 @@ void main() {
     });
   });
 
-  group('Navigation logic (_InitialRouteDecider)', () {
-    testWidgets('navigates to folder selection when no photos exist',
-        (tester) async {
-      final db = AppDatabase.inMemory();
-      final platform = _testPlatformService();
-
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            Provider<AppDatabase>.value(value: db),
-            Provider<PlatformService>.value(value: platform),
-            ChangeNotifierProvider(
-              create: (_) => ScanProvider(
-                db: db,
-                platformService: platform,
-                scanner: FakePhotoScanner(),
-              ),
-            ),
-          ],
-          child: MaterialApp(
-            home: const Scaffold(body: Text('Loading')),
-            routes: {
-              '/folders': (context) =>
-                  const Scaffold(body: Text('Folder Selection')),
-              '/feed': (context) => const Scaffold(body: Text('Feed')),
-            },
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // With no photos, we stay at the home/loading screen
-      // (The actual navigation is in PhotoFeedApp._InitialRouteDecider)
-    });
-  });
 }
