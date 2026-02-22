@@ -153,6 +153,17 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((r) => r.read(photos.yearMonth)!).toList();
   }
 
+  /// Returns a map of photo path -> fileModifiedAt for incremental scanning.
+  Future<Map<String, DateTime>> getExistingFileModifiedTimes() async {
+    final query = selectOnly(photos)
+      ..addColumns([photos.path, photos.fileModifiedAt]);
+    final rows = await query.get();
+    return {
+      for (final row in rows)
+        row.read(photos.path)!: row.read(photos.fileModifiedAt)!,
+    };
+  }
+
   // ── Scan settings methods ─────────────────────────────────────────────────
 
   /// Replaces all scan folder entries with [folders].

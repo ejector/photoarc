@@ -107,9 +107,12 @@ class ScanProvider extends ChangeNotifier {
     final thumbnailCacheDir =
         await _platformService.getThumbnailCacheDirectory();
 
+    final existingFiles = await _db.getExistingFileModifiedTimes();
+
     final stream = _scanner.startScan(
       directories: _selectedFolders,
       thumbnailCacheDir: thumbnailCacheDir,
+      existingFiles: existingFiles,
     );
 
     _scanSubscription = stream.listen(
