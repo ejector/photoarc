@@ -90,6 +90,7 @@ class ScanProvider extends ChangeNotifier {
   int get totalPhotos => _totalPhotos;
 
   StreamSubscription<ScanProgress>? _scanSubscription;
+  Future<void>? _pendingBatchInsert;
 
   /// Starts a scan of the selected folders.
   Future<void> startScan() async {
@@ -137,17 +138,27 @@ class ScanProvider extends ChangeNotifier {
         _currentDirectory = directory;
         notifyListeners();
       case BatchReadyProgress(:final photos):
-        _insertBatch(photos).catchError((error) {
+        _pendingBatchInsert = _insertBatch(photos).catchError((error) {
           debugPrint('Failed to insert photo batch: $error');
         });
       case ScanCompleteProgress(:final totalPhotos):
-        _totalPhotos = totalPhotos;
-        _scanComplete = true;
-        _isScanning = false;
-        notifyListeners();
+        _finalizeScan(totalPhotos);
       case ScanErrorProgress():
         break; // Non-fatal errors are ignored for now
     }
+  }
+
+  Future<void> _finalizeScan(int totalPhotos) async {
+    // Wait for any pending batch insert to complete before marking scan done,
+    // otherwise the feed screen may query the DB before the last batch is committed.
+    if (_pendingBatchInsert != null) {
+      await _pendingBatchInsert;
+      _pendingBatchInsert = null;
+    }
+    _totalPhotos = totalPhotos;
+    _scanComplete = true;
+    _isScanning = false;
+    notifyListeners();
   }
 
   Future<void> _insertBatch(List<ScannedPhoto> photos) async {
