@@ -141,18 +141,18 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 - Create: `lib/widgets/photo_grid_tile.dart`
 - Create: `lib/widgets/month_header.dart`
 
-- [ ] Build CustomScrollView with alternating SliverList (month headers) + SliverGrid (photo tiles)
-- [ ] Implement adaptive grid with SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200)
-- [ ] Load thumbnails from disk with center-crop (BoxFit.cover), apply EXIF orientation via Transform.rotate
-- [ ] Show placeholder skeleton while thumbnails load
-- [ ] Implement lazy loading (builder pattern) and pagination (load more on scroll near bottom)
-- [ ] Implement sort toggle in app bar (newest/oldest first)
-- [ ] Add re-scan button in app bar that navigates to folder selection screen
-- [ ] Show window title with total photo count
-- [ ] Handle empty state (no photos found message)
-- [ ] Implement hover tooltip on thumbnails showing date taken and folder path
-- [ ] Write widget tests for feed screen (grid renders, month headers appear, sort toggle works)
-- [ ] Run project test suite - must pass before task 10
+- [x] Build CustomScrollView with alternating SliverList (month headers) + SliverGrid (photo tiles)
+- [x] Implement adaptive grid with SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 200)
+- [x] Load thumbnails from disk with center-crop (BoxFit.cover), apply EXIF orientation via Transform.rotate
+- [x] Show placeholder skeleton while thumbnails load
+- [x] Implement lazy loading (builder pattern) and pagination (load more on scroll near bottom)
+- [x] Implement sort toggle in app bar (newest/oldest first)
+- [x] Add re-scan button in app bar that navigates to folder selection screen
+- [x] Show window title with total photo count
+- [x] Handle empty state (no photos found message)
+- [x] Implement hover tooltip on thumbnails showing date taken and folder path
+- [x] Write widget tests for feed screen (grid renders, month headers appear, sort toggle works)
+- [x] Run project test suite - must pass before task 10
 
 ### Task 10: Full-screen photo view
 
