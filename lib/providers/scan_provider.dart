@@ -198,6 +198,7 @@ class ScanProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _scanner.stop();
     _scanSubscription?.cancel();
     super.dispose();
   }
