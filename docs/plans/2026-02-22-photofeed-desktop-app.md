@@ -174,12 +174,12 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 **Files:**
 - Create: `lib/widgets/date_scrollbar.dart`
 
-- [ ] Build custom scrollbar wrapping the feed CustomScrollView
-- [ ] Show floating date label (month/year) when user drags scrollbar thumb
-- [ ] Map scroll offset to photo index to year_month group for label text
-- [ ] Fade out label when user releases scrollbar
-- [ ] Write widget tests for date scrollbar (label appears on drag, correct date displayed)
-- [ ] Run project test suite - must pass before task 12
+- [x] Build custom scrollbar wrapping the feed CustomScrollView
+- [x] Show floating date label (month/year) when user drags scrollbar thumb
+- [x] Map scroll offset to photo index to year_month group for label text
+- [x] Fade out label when user releases scrollbar
+- [x] Write widget tests for date scrollbar (label appears on drag, correct date displayed)
+- [x] Run project test suite - must pass before task 12
 
 ### Task 12: RAW and special format support
 

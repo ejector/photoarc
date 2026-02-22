@@ -5,6 +5,7 @@ import '../database/database.dart';
 import '../providers/feed_provider.dart';
 import '../services/platform_service.dart';
 import '../services/thumbnail_service.dart';
+import '../widgets/date_scrollbar.dart';
 import '../widgets/month_header.dart';
 import '../widgets/photo_fullscreen.dart';
 import '../widgets/photo_grid_tile.dart';
@@ -145,45 +146,54 @@ class _FeedScreenState extends State<FeedScreen> {
         .where((ym) => grouped.containsKey(ym))
         .toList();
 
-    return CustomScrollView(
+    final photoCounts = <String, int>{
+      for (final ym in yearMonths) ym: grouped[ym]!.length,
+    };
+
+    return DateScrollbar(
       controller: _scrollController,
-      slivers: [
-        for (final yearMonth in yearMonths) ...[
-          SliverToBoxAdapter(
-            child: MonthHeader(yearMonth: yearMonth),
-          ),
-          SliverGrid(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200,
-              crossAxisSpacing: 4,
-              mainAxisSpacing: 4,
+      yearMonths: yearMonths,
+      photoCounts: photoCounts,
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          for (final yearMonth in yearMonths) ...[
+            SliverToBoxAdapter(
+              child: MonthHeader(yearMonth: yearMonth),
             ),
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final photos = grouped[yearMonth]!;
-                final photo = photos[index];
-                final thumbBytes = _thumbnailService.getThumbnail(
-                  photoPath: photo.path,
-                  thumbnailPath: photo.thumbnailPath,
-                );
-                return PhotoGridTile(
-                  photo: photo,
-                  thumbnailBytes: thumbBytes,
-                  onTap: () => _openFullscreen(feedProvider, photo),
-                );
-              },
-              childCount: grouped[yearMonth]!.length,
+            SliverGrid(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200,
+                crossAxisSpacing: 4,
+                mainAxisSpacing: 4,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final photos = grouped[yearMonth]!;
+                  final photo = photos[index];
+                  final thumbBytes = _thumbnailService.getThumbnail(
+                    photoPath: photo.path,
+                    thumbnailPath: photo.thumbnailPath,
+                  );
+                  return PhotoGridTile(
+                    photo: photo,
+                    thumbnailBytes: thumbBytes,
+                    onTap: () => _openFullscreen(feedProvider, photo),
+                  );
+                },
+                childCount: grouped[yearMonth]!.length,
+              ),
             ),
-          ),
+          ],
+          if (feedProvider.isLoading)
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.all(32),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ),
         ],
-        if (feedProvider.isLoading)
-          const SliverToBoxAdapter(
-            child: Padding(
-              padding: EdgeInsets.all(32),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          ),
-      ],
+      ),
     );
   }
 }
