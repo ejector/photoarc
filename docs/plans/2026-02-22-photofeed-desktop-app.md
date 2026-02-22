@@ -70,16 +70,16 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 **Files:**
 - Create: `lib/services/photo_scanner.dart`
 
-- [ ] Implement file system walker: recursive directory traversal, filter by supported extensions (jpg, jpeg, png, gif, bmp, webp, tiff, tif), skip hidden dirs and symlink loops, handle permission errors
-- [ ] Implement EXIF extraction: parse DateTimeOriginal and Orientation from JPG/TIFF, fall back to file modification date
-- [ ] Implement thumbnail generation: decode with image package, resize to 200x200, save as JPEG to cache directory
-- [ ] Compute year_month string from resolved date
-- [ ] Wrap scanner in Dart Isolate with SendPort/ReceivePort for progress streaming
-- [ ] Implement batch processing: accumulate 100 photos per batch, send to main isolate
-- [ ] Implement incremental re-scan: check file_modified_at before processing, skip unchanged files
-- [ ] Define progress message types: photosFound count, currentDirectory, batchReady, scanComplete, scanError
-- [ ] Write tests for file walking logic, EXIF parsing, thumbnail generation, batch accumulation
-- [ ] Run project test suite - must pass before task 5
+- [x] Implement file system walker: recursive directory traversal, filter by supported extensions (jpg, jpeg, png, gif, bmp, webp, tiff, tif), skip hidden dirs and symlink loops, handle permission errors
+- [x] Implement EXIF extraction: parse DateTimeOriginal and Orientation from JPG/TIFF, fall back to file modification date
+- [x] Implement thumbnail generation: decode with image package, resize to 200x200, save as JPEG to cache directory
+- [x] Compute year_month string from resolved date
+- [x] Wrap scanner in Dart Isolate with SendPort/ReceivePort for progress streaming
+- [x] Implement batch processing: accumulate 100 photos per batch, send to main isolate
+- [x] Implement incremental re-scan: check file_modified_at before processing, skip unchanged files
+- [x] Define progress message types: photosFound count, currentDirectory, batchReady, scanComplete, scanError
+- [x] Write tests for file walking logic, EXIF parsing, thumbnail generation, batch accumulation
+- [x] Run project test suite - must pass before task 5
 
 ### Task 5: Thumbnail service (caching layer)
 
