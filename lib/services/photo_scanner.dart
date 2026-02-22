@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:exif/exif.dart';
 import 'package:image/image.dart' as img;
@@ -8,7 +9,8 @@ import 'package:path/path.dart' as p;
 
 // ── Supported extensions ─────────────────────────────────────────────────────
 
-const supportedExtensions = {
+/// Standard image formats decodable by the `image` package.
+const standardExtensions = {
   '.jpg',
   '.jpeg',
   '.png',
@@ -19,10 +21,54 @@ const supportedExtensions = {
   '.tif',
 };
 
+/// RAW camera formats that need external tool extraction.
+const rawExtensions = {
+  '.cr2',
+  '.cr3',
+  '.nef',
+  '.arw',
+  '.dng',
+  '.orf',
+  '.rw2',
+  '.raf',
+};
+
+/// HEIC/HEIF/AVIF formats that need platform-specific decoding.
+const heicExtensions = {
+  '.heic',
+  '.heif',
+  '.avif',
+};
+
+/// SVG vector format.
+const svgExtensions = {
+  '.svg',
+};
+
+/// All supported extensions across all format categories.
+const supportedExtensions = {
+  ...standardExtensions,
+  ...rawExtensions,
+  ...heicExtensions,
+  ...svgExtensions,
+};
+
 bool isSupportedImage(String path) {
   final ext = p.extension(path).toLowerCase();
   return supportedExtensions.contains(ext);
 }
+
+/// Returns the format category for a given file path.
+FormatCategory getFormatCategory(String path) {
+  final ext = p.extension(path).toLowerCase();
+  if (standardExtensions.contains(ext)) return FormatCategory.standard;
+  if (rawExtensions.contains(ext)) return FormatCategory.raw;
+  if (heicExtensions.contains(ext)) return FormatCategory.heic;
+  if (svgExtensions.contains(ext)) return FormatCategory.svg;
+  return FormatCategory.standard;
+}
+
+enum FormatCategory { standard, raw, heic, svg }
 
 // ── Progress message types ───────────────────────────────────────────────────
 
@@ -282,6 +328,223 @@ Future<String?> generateThumbnail(
   }
 }
 
+// ── RAW thumbnail extraction ─────────────────────────────────────────────────
+
+/// Attempts to extract an embedded JPEG preview from a RAW file using
+/// available command-line tools (dcraw or exiftool).
+/// Returns the thumbnail path on success, null on failure.
+Future<String?> generateRawThumbnail(
+  File rawFile,
+  String cacheDir,
+) async {
+  final hash = rawFile.path.hashCode.toRadixString(16);
+  final thumbFilename = '${hash}_thumb.jpg';
+  final thumbPath = p.join(cacheDir, thumbFilename);
+
+  // Try dcraw first: extracts embedded JPEG preview
+  if (await _tryDcrawExtract(rawFile.path, thumbPath)) {
+    return thumbPath;
+  }
+
+  // Try exiftool: extracts preview image
+  if (await _tryExiftoolExtract(rawFile.path, thumbPath)) {
+    return thumbPath;
+  }
+
+  // No tool available - return null (no thumbnail)
+  return null;
+}
+
+/// Tries to extract embedded JPEG using dcraw -e.
+Future<bool> _tryDcrawExtract(String rawPath, String outputPath) async {
+  try {
+    // dcraw -e -c outputs the embedded JPEG to stdout
+    final result = await Process.run(
+      'dcraw',
+      ['-e', '-c', rawPath],
+      stdoutEncoding: null,
+    );
+    if (result.exitCode == 0) {
+      final bytes = result.stdout as List<int>;
+      if (bytes.isNotEmpty) {
+        // Resize the extracted preview to thumbnail size
+        final image = img.decodeImage(Uint8List.fromList(bytes));
+        if (image != null) {
+          final thumbnail = img.copyResizeCropSquare(image, size: 200);
+          await File(outputPath).writeAsBytes(img.encodeJpg(thumbnail, quality: 85));
+          return true;
+        }
+      }
+    }
+  } on ProcessException {
+    // dcraw not available
+  } catch (_) {
+    // Other errors
+  }
+  return false;
+}
+
+/// Tries to extract preview image using exiftool.
+Future<bool> _tryExiftoolExtract(String rawPath, String outputPath) async {
+  try {
+    final result = await Process.run(
+      'exiftool',
+      ['-b', '-PreviewImage', rawPath],
+      stdoutEncoding: null,
+    );
+    if (result.exitCode == 0) {
+      final bytes = result.stdout as List<int>;
+      if (bytes.isNotEmpty) {
+        final image = img.decodeImage(Uint8List.fromList(bytes));
+        if (image != null) {
+          final thumbnail = img.copyResizeCropSquare(image, size: 200);
+          await File(outputPath).writeAsBytes(img.encodeJpg(thumbnail, quality: 85));
+          return true;
+        }
+      }
+    }
+  } on ProcessException {
+    // exiftool not available
+  } catch (_) {
+    // Other errors
+  }
+  return false;
+}
+
+// ── HEIC/HEIF/AVIF thumbnail generation ──────────────────────────────────────
+
+/// Generates a thumbnail for HEIC/HEIF/AVIF files using platform-specific tools.
+/// On macOS, uses `sips` to convert to JPEG. On Linux, tries `heif-convert`.
+/// Returns the thumbnail path on success, null on failure.
+Future<String?> generateHeicThumbnail(
+  File heicFile,
+  String cacheDir,
+) async {
+  final hash = heicFile.path.hashCode.toRadixString(16);
+  final thumbFilename = '${hash}_thumb.jpg';
+  final thumbPath = p.join(cacheDir, thumbFilename);
+
+  // Intermediate full-size JPEG for conversion
+  final tempJpeg = p.join(cacheDir, '${hash}_temp_heic.jpg');
+
+  try {
+    bool converted = false;
+
+    if (Platform.isMacOS) {
+      converted = await _trySipsConvert(heicFile.path, tempJpeg);
+    }
+
+    if (!converted) {
+      converted = await _tryHeifConvert(heicFile.path, tempJpeg);
+    }
+
+    if (converted && File(tempJpeg).existsSync()) {
+      // Resize to thumbnail
+      final bytes = await File(tempJpeg).readAsBytes();
+      final image = img.decodeImage(bytes);
+      if (image != null) {
+        final thumbnail = img.copyResizeCropSquare(image, size: 200);
+        await File(thumbPath).writeAsBytes(img.encodeJpg(thumbnail, quality: 85));
+        // Clean up temp file
+        try {
+          await File(tempJpeg).delete();
+        } catch (_) {}
+        return thumbPath;
+      }
+    }
+  } catch (_) {
+    // Clean up on failure
+  }
+
+  // Clean up temp file on failure
+  try {
+    if (File(tempJpeg).existsSync()) await File(tempJpeg).delete();
+  } catch (_) {}
+
+  return null;
+}
+
+/// Uses macOS sips to convert HEIC to JPEG.
+Future<bool> _trySipsConvert(String inputPath, String outputPath) async {
+  try {
+    final result = await Process.run(
+      'sips',
+      ['-s', 'format', 'jpeg', inputPath, '--out', outputPath],
+    );
+    return result.exitCode == 0 && File(outputPath).existsSync();
+  } on ProcessException {
+    return false;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// Uses heif-convert (libheif) to convert HEIC to JPEG.
+Future<bool> _tryHeifConvert(String inputPath, String outputPath) async {
+  try {
+    final result = await Process.run('heif-convert', [inputPath, outputPath]);
+    return result.exitCode == 0 && File(outputPath).existsSync();
+  } on ProcessException {
+    return false;
+  } catch (_) {
+    return false;
+  }
+}
+
+// ── SVG placeholder ──────────────────────────────────────────────────────────
+
+/// Generates a simple placeholder thumbnail for SVG files.
+/// Creates a small image with a distinguishing visual indicator.
+/// Returns the thumbnail path on success, null on failure.
+Future<String?> generateSvgPlaceholder(
+  File svgFile,
+  String cacheDir,
+) async {
+  try {
+    final hash = svgFile.path.hashCode.toRadixString(16);
+    final thumbFilename = '${hash}_thumb.jpg';
+    final thumbPath = p.join(cacheDir, thumbFilename);
+
+    // Create a 200x200 placeholder image with a light gray background
+    // and "SVG" text indicator
+    final image = img.Image(width: 200, height: 200);
+    img.fill(image, color: img.ColorFloat16.rgb(220, 220, 230));
+
+    // Draw a simple border
+    img.drawRect(image,
+      x1: 10, y1: 10, x2: 189, y2: 189,
+      color: img.ColorFloat16.rgb(150, 150, 170),
+      thickness: 2,
+    );
+
+    await File(thumbPath).writeAsBytes(img.encodeJpg(image, quality: 85));
+    return thumbPath;
+  } catch (_) {
+    return null;
+  }
+}
+
+// ── Format-aware thumbnail dispatch ──────────────────────────────────────────
+
+/// Generates a thumbnail based on the file's format category.
+/// Dispatches to the appropriate handler for standard, RAW, HEIC, or SVG files.
+Future<String?> generateThumbnailForFormat(
+  File imageFile,
+  String cacheDir,
+) async {
+  final category = getFormatCategory(imageFile.path);
+  switch (category) {
+    case FormatCategory.standard:
+      return generateThumbnail(imageFile, cacheDir);
+    case FormatCategory.raw:
+      return generateRawThumbnail(imageFile, cacheDir);
+    case FormatCategory.heic:
+      return generateHeicThumbnail(imageFile, cacheDir);
+    case FormatCategory.svg:
+      return generateSvgPlaceholder(imageFile, cacheDir);
+  }
+}
+
 // ── Year/month computation ───────────────────────────────────────────────────
 
 /// Computes "YYYY-MM" string from a DateTime.
@@ -326,8 +589,8 @@ Future<void> _scannerIsolateEntry(ScanConfig config) async {
     final exif = await extractExif(file);
     final dateTaken = exif.dateTaken ?? fileModified;
 
-    // Generate thumbnail
-    final thumbnailPath = await generateThumbnail(file, config.thumbnailCacheDir);
+    // Generate thumbnail (format-aware)
+    final thumbnailPath = await generateThumbnailForFormat(file, config.thumbnailCacheDir);
 
     final photo = ScannedPhoto(
       path: file.path,

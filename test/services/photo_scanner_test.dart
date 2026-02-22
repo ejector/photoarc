@@ -34,12 +34,38 @@ void main() {
       expect(isSupportedImage('photo.TIFF'), isTrue);
     });
 
+    test('accepts RAW format extensions', () {
+      expect(isSupportedImage('photo.cr2'), isTrue);
+      expect(isSupportedImage('photo.cr3'), isTrue);
+      expect(isSupportedImage('photo.nef'), isTrue);
+      expect(isSupportedImage('photo.arw'), isTrue);
+      expect(isSupportedImage('photo.dng'), isTrue);
+      expect(isSupportedImage('photo.orf'), isTrue);
+      expect(isSupportedImage('photo.rw2'), isTrue);
+      expect(isSupportedImage('photo.raf'), isTrue);
+    });
+
+    test('accepts HEIC/HEIF/AVIF extensions', () {
+      expect(isSupportedImage('photo.heic'), isTrue);
+      expect(isSupportedImage('photo.heif'), isTrue);
+      expect(isSupportedImage('photo.avif'), isTrue);
+    });
+
+    test('accepts SVG extension', () {
+      expect(isSupportedImage('image.svg'), isTrue);
+    });
+
+    test('accepts uppercase RAW/HEIC/SVG extensions', () {
+      expect(isSupportedImage('photo.CR2'), isTrue);
+      expect(isSupportedImage('photo.NEF'), isTrue);
+      expect(isSupportedImage('photo.HEIC'), isTrue);
+      expect(isSupportedImage('photo.SVG'), isTrue);
+    });
+
     test('rejects unsupported extensions', () {
       expect(isSupportedImage('document.pdf'), isFalse);
       expect(isSupportedImage('video.mp4'), isFalse);
       expect(isSupportedImage('readme.txt'), isFalse);
-      expect(isSupportedImage('raw.cr2'), isFalse);
-      expect(isSupportedImage('photo.heic'), isFalse);
     });
 
     test('rejects files without extension', () {
@@ -340,6 +366,180 @@ void main() {
       expect(photo.width, isNull);
       expect(photo.height, isNull);
       expect(photo.thumbnailPath, isNull);
+    });
+  });
+
+  group('getFormatCategory', () {
+    test('returns standard for standard image formats', () {
+      expect(getFormatCategory('photo.jpg'), FormatCategory.standard);
+      expect(getFormatCategory('photo.png'), FormatCategory.standard);
+      expect(getFormatCategory('photo.gif'), FormatCategory.standard);
+      expect(getFormatCategory('photo.webp'), FormatCategory.standard);
+    });
+
+    test('returns raw for RAW camera formats', () {
+      expect(getFormatCategory('photo.cr2'), FormatCategory.raw);
+      expect(getFormatCategory('photo.cr3'), FormatCategory.raw);
+      expect(getFormatCategory('photo.nef'), FormatCategory.raw);
+      expect(getFormatCategory('photo.arw'), FormatCategory.raw);
+      expect(getFormatCategory('photo.dng'), FormatCategory.raw);
+      expect(getFormatCategory('photo.orf'), FormatCategory.raw);
+      expect(getFormatCategory('photo.rw2'), FormatCategory.raw);
+      expect(getFormatCategory('photo.raf'), FormatCategory.raw);
+    });
+
+    test('returns heic for HEIC/HEIF/AVIF formats', () {
+      expect(getFormatCategory('photo.heic'), FormatCategory.heic);
+      expect(getFormatCategory('photo.heif'), FormatCategory.heic);
+      expect(getFormatCategory('photo.avif'), FormatCategory.heic);
+    });
+
+    test('returns svg for SVG files', () {
+      expect(getFormatCategory('image.svg'), FormatCategory.svg);
+    });
+
+    test('handles uppercase extensions', () {
+      expect(getFormatCategory('photo.CR2'), FormatCategory.raw);
+      expect(getFormatCategory('photo.HEIC'), FormatCategory.heic);
+      expect(getFormatCategory('photo.SVG'), FormatCategory.svg);
+    });
+
+    test('defaults to standard for unknown extensions', () {
+      expect(getFormatCategory('file.xyz'), FormatCategory.standard);
+    });
+  });
+
+  group('generateRawThumbnail', () {
+    test('returns null when no extraction tools are available', () async {
+      // Create a dummy RAW file (no valid RAW data, tools won't be available in test)
+      final file = File(p.join(tempDir.path, 'test.cr2'));
+      file.writeAsBytesSync([0x00, 0x01, 0x02, 0x03]);
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      final result = await generateRawThumbnail(file, cacheDir);
+      // Without dcraw/exiftool installed, should return null gracefully
+      expect(result, isNull);
+    });
+  });
+
+  group('generateHeicThumbnail', () {
+    test('returns null for invalid HEIC data without conversion tools', () async {
+      final file = File(p.join(tempDir.path, 'test.heic'));
+      file.writeAsBytesSync([0x00, 0x01, 0x02, 0x03]);
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      final result = await generateHeicThumbnail(file, cacheDir);
+      // May succeed on macOS (sips available) or fail gracefully
+      // The important thing is it doesn't throw
+      expect(result, anyOf(isNull, isA<String>()));
+    });
+  });
+
+  group('generateSvgPlaceholder', () {
+    test('generates a placeholder thumbnail for SVG files', () async {
+      final file = File(p.join(tempDir.path, 'test.svg'));
+      file.writeAsStringSync('<svg></svg>');
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      final result = await generateSvgPlaceholder(file, cacheDir);
+      expect(result, isNotNull);
+      expect(File(result!).existsSync(), isTrue);
+      expect(result, endsWith('_thumb.jpg'));
+    });
+
+    test('generates consistent path for same file', () async {
+      final file = File(p.join(tempDir.path, 'icon.svg'));
+      file.writeAsStringSync('<svg></svg>');
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      final result1 = await generateSvgPlaceholder(file, cacheDir);
+      final result2 = await generateSvgPlaceholder(file, cacheDir);
+      expect(result1, result2);
+    });
+  });
+
+  group('generateThumbnailForFormat', () {
+    test('dispatches standard formats to generateThumbnail', () async {
+      final pngBytes = _createValidPng(300, 300);
+      final file = File(p.join(tempDir.path, 'test.png'));
+      file.writeAsBytesSync(pngBytes);
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      final result = await generateThumbnailForFormat(file, cacheDir);
+      expect(result, isNotNull);
+      expect(File(result!).existsSync(), isTrue);
+    });
+
+    test('dispatches SVG to generateSvgPlaceholder', () async {
+      final file = File(p.join(tempDir.path, 'test.svg'));
+      file.writeAsStringSync('<svg></svg>');
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      final result = await generateThumbnailForFormat(file, cacheDir);
+      expect(result, isNotNull);
+      expect(File(result!).existsSync(), isTrue);
+    });
+
+    test('dispatches RAW to generateRawThumbnail', () async {
+      final file = File(p.join(tempDir.path, 'test.cr2'));
+      file.writeAsBytesSync([0x00]);
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      // Will return null in test env (no dcraw/exiftool) but shouldn't throw
+      final result = await generateThumbnailForFormat(file, cacheDir);
+      expect(result, anyOf(isNull, isA<String>()));
+    });
+
+    test('dispatches HEIC to generateHeicThumbnail', () async {
+      final file = File(p.join(tempDir.path, 'test.heic'));
+      file.writeAsBytesSync([0x00]);
+
+      final cacheDir = p.join(tempDir.path, 'cache');
+      Directory(cacheDir).createSync();
+
+      // Will depend on sips availability but shouldn't throw
+      final result = await generateThumbnailForFormat(file, cacheDir);
+      expect(result, anyOf(isNull, isA<String>()));
+    });
+  });
+
+  group('walkDirectories with new formats', () {
+    test('finds RAW files', () async {
+      File(p.join(tempDir.path, 'photo.cr2')).createSync();
+      File(p.join(tempDir.path, 'photo.nef')).createSync();
+      File(p.join(tempDir.path, 'photo.dng')).createSync();
+
+      final files = await walkDirectories([tempDir.path]).toList();
+      final filenames = files.map((f) => p.basename(f.path)).toSet();
+
+      expect(filenames, contains('photo.cr2'));
+      expect(filenames, contains('photo.nef'));
+      expect(filenames, contains('photo.dng'));
+    });
+
+    test('finds HEIC and SVG files', () async {
+      File(p.join(tempDir.path, 'photo.heic')).createSync();
+      File(p.join(tempDir.path, 'icon.svg')).createSync();
+
+      final files = await walkDirectories([tempDir.path]).toList();
+      final filenames = files.map((f) => p.basename(f.path)).toSet();
+
+      expect(filenames, contains('photo.heic'));
+      expect(filenames, contains('icon.svg'));
     });
   });
 

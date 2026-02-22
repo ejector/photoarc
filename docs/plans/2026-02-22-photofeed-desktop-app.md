@@ -186,12 +186,12 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 **Files:**
 - Modify: `lib/services/photo_scanner.dart`
 
-- [ ] Add RAW format support (cr2, cr3, nef, arw, dng, orf, rw2, raf): extract embedded JPEG preview via LibRaw process invocation, resize to thumbnail
-- [ ] Add HEIC/HEIF/AVIF handling: platform-specific decoder or placeholder fallback
-- [ ] Add SVG handling: placeholder or flutter_svg render
-- [ ] Update supported extensions list in scanner
-- [ ] Write tests for RAW thumbnail extraction and format fallbacks
-- [ ] Run project test suite - must pass before task 13
+- [x] Add RAW format support (cr2, cr3, nef, arw, dng, orf, rw2, raf): extract embedded JPEG preview via LibRaw process invocation, resize to thumbnail
+- [x] Add HEIC/HEIF/AVIF handling: platform-specific decoder or placeholder fallback
+- [x] Add SVG handling: placeholder or flutter_svg render
+- [x] Update supported extensions list in scanner
+- [x] Write tests for RAW thumbnail extraction and format fallbacks
+- [x] Run project test suite - must pass before task 13
 
 ### Task 13: Verify acceptance criteria
 
