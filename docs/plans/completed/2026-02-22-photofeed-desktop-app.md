@@ -205,6 +205,6 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 
 ### Task 14: Update documentation
 
-- [ ] Update README.md with project description, setup instructions, build/run commands
-- [ ] Create CLAUDE.md with project conventions, architecture notes, and build commands
-- [ ] Move this plan to `docs/plans/completed/`
+- [x] Update README.md with project description, setup instructions, build/run commands
+- [x] Create CLAUDE.md with project conventions, architecture notes, and build commands
+- [x] Move this plan to `docs/plans/completed/`
