@@ -41,8 +41,8 @@ class _ScanningScreenState extends State<ScanningScreen> {
     Navigator.of(context).pushReplacementNamed('/feed');
   }
 
-  void _onCancel() {
-    _scanProvider.stopScan();
+  Future<void> _onCancel() async {
+    await _scanProvider.stopScan();
     _navigateToFeed();
   }
 

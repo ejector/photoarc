@@ -59,8 +59,8 @@ class FeedProvider extends ChangeNotifier {
     _photos = [];
     _offset = 0;
     _hasMore = true;
-    notifyListeners();
     _totalPhotoCount = await _db.getValidPhotoCount();
+    notifyListeners();
     await loadMore();
     await _loadYearMonths();
   }

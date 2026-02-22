@@ -299,6 +299,20 @@ DateTime? _parseExifDate(String dateStr) {
   }
 }
 
+// ── Thumbnail hashing ────────────────────────────────────────────────────────
+
+/// Computes a 63-bit hash string for thumbnail filenames.
+/// Uses FNV-1a inspired algorithm for better collision resistance
+/// than Dart's 32-bit String.hashCode.
+String _thumbnailHash(String path) {
+  var h = 0xcbf29ce484222325 & 0x7FFFFFFFFFFFFFFF;
+  for (var i = 0; i < path.length; i++) {
+    h ^= path.codeUnitAt(i);
+    h = (h * 0x100000001b3) & 0x7FFFFFFFFFFFFFFF;
+  }
+  return h.toRadixString(16);
+}
+
 // ── Thumbnail generation ─────────────────────────────────────────────────────
 
 /// Generates a 200x200 thumbnail for the given image file.
@@ -315,7 +329,7 @@ Future<String?> generateThumbnail(
     // Resize to fit within 200x200, maintaining aspect ratio, then center-crop
     final thumbnail = img.copyResizeCropSquare(image, size: 200);
 
-    final hash = imageFile.path.hashCode.toRadixString(16);
+    final hash = _thumbnailHash(imageFile.path);
     final thumbFilename = '${hash}_thumb.jpg';
     final thumbPath = p.join(cacheDir, thumbFilename);
 
@@ -337,7 +351,7 @@ Future<String?> generateRawThumbnail(
   File rawFile,
   String cacheDir,
 ) async {
-  final hash = rawFile.path.hashCode.toRadixString(16);
+  final hash = _thumbnailHash(rawFile.path);
   final thumbFilename = '${hash}_thumb.jpg';
   final thumbPath = p.join(cacheDir, thumbFilename);
 
@@ -420,7 +434,7 @@ Future<String?> generateHeicThumbnail(
   File heicFile,
   String cacheDir,
 ) async {
-  final hash = heicFile.path.hashCode.toRadixString(16);
+  final hash = _thumbnailHash(heicFile.path);
   final thumbFilename = '${hash}_thumb.jpg';
   final thumbPath = p.join(cacheDir, thumbFilename);
 
@@ -502,7 +516,7 @@ Future<String?> generateSvgPlaceholder(
   String cacheDir,
 ) async {
   try {
-    final hash = svgFile.path.hashCode.toRadixString(16);
+    final hash = _thumbnailHash(svgFile.path);
     final thumbFilename = '${hash}_thumb.jpg';
     final thumbPath = p.join(cacheDir, thumbFilename);
 
