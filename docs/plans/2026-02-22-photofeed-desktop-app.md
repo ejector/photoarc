@@ -44,14 +44,14 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 - Create: `lib/database/database.dart`
 - Create: `lib/database/tables.dart`
 
-- [ ] Define `photos` table with all columns from spec (id, path, filename, directory, date_taken, file_size, format, width, height, thumbnail_path, year_month, orientation, is_valid, file_modified_at, created_at)
-- [ ] Define `scan_settings` table (id, folder_path, is_active)
-- [ ] Define `app_settings` table (key, value)
-- [ ] Add indexes on date_taken, year_month, path
-- [ ] Implement DatabaseService with methods: insertPhotoBatch, getPhotosPaginated (sorted by date_taken, filtered by is_valid), getPhotosByYearMonth, getFileModifiedAt, saveScanFolders, loadScanFolders, getSetting, setSetting
-- [ ] Run `dart run build_runner build` to generate drift code
-- [ ] Write unit tests for all database methods (insert, query, pagination, batch insert, settings)
-- [ ] Run project test suite - must pass before task 3
+- [x] Define `photos` table with all columns from spec (id, path, filename, directory, date_taken, file_size, format, width, height, thumbnail_path, year_month, orientation, is_valid, file_modified_at, created_at)
+- [x] Define `scan_settings` table (id, folder_path, is_active)
+- [x] Define `app_settings` table (key, value)
+- [x] Add indexes on date_taken, year_month, path
+- [x] Implement DatabaseService with methods: insertPhotoBatch, getPhotosPaginated (sorted by date_taken, filtered by is_valid), getPhotosByYearMonth, getFileModifiedAt, saveScanFolders, loadScanFolders, getSetting, setSetting
+- [x] Run `dart run build_runner build` to generate drift code
+- [x] Write unit tests for all database methods (insert, query, pagination, batch insert, settings)
+- [x] Run project test suite - must pass before task 3
 
 ### Task 3: Platform service
 
