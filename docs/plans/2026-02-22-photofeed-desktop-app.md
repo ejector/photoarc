@@ -29,14 +29,14 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 - Modify: `pubspec.yaml`
 - Create: `lib/main.dart`, `lib/app.dart`
 
-- [ ] Run `flutter create --platforms=macos,windows,linux --org com.photofeed photo_feed` (or restructure existing directory)
-- [ ] Add all dependencies to pubspec.yaml: drift, drift_dev, build_runner, sqlite3_flutter_libs, provider, path_provider, path, exif, image, file_picker, url_launcher, intl
-- [ ] Set up lib/main.dart with MultiProvider and MaterialApp (Material 3 theme)
-- [ ] Set up lib/app.dart with basic navigation shell (placeholder screens)
-- [ ] Configure macOS entitlements for file system access and network (if needed)
-- [ ] Set minimum window size to 800x600
-- [ ] Write smoke test verifying app builds and renders
-- [ ] Run project test suite - must pass before task 2
+- [x] Run `flutter create --platforms=macos,windows,linux --org com.photofeed photo_feed` (or restructure existing directory)
+- [x] Add all dependencies to pubspec.yaml: drift, drift_dev, build_runner, sqlite3_flutter_libs, provider, path_provider, path, exif, image, file_picker, url_launcher, intl
+- [x] Set up lib/main.dart with MultiProvider and MaterialApp (Material 3 theme)
+- [x] Set up lib/app.dart with basic navigation shell (placeholder screens)
+- [x] Configure macOS entitlements for file system access and network (if needed)
+- [x] Set minimum window size to 800x600
+- [x] Write smoke test verifying app builds and renders
+- [x] Run project test suite - must pass before task 2
 
 ### Task 2: Database layer with drift
 
