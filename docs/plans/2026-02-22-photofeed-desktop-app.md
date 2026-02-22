@@ -58,12 +58,12 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 **Files:**
 - Create: `lib/services/platform_service.dart`
 
-- [ ] Implement getAvailableDrives() - macOS: /Volumes/* + home; Windows: logical drives; Linux: /proc/mounts + common paths
-- [ ] Implement getDefaultPhotoDirectories() - returns Pictures, Downloads paths per platform
-- [ ] Implement openFileManager(path) - macOS: open -R; Windows: explorer.exe /select; Linux: xdg-open
-- [ ] Implement getThumbnailCacheDirectory() using path_provider
-- [ ] Write unit tests for platform service (mock file system where needed)
-- [ ] Run project test suite - must pass before task 4
+- [x] Implement getAvailableDrives() - macOS: /Volumes/* + home; Windows: logical drives; Linux: /proc/mounts + common paths
+- [x] Implement getDefaultPhotoDirectories() - returns Pictures, Downloads paths per platform
+- [x] Implement openFileManager(path) - macOS: open -R; Windows: explorer.exe /select; Linux: xdg-open
+- [x] Implement getThumbnailCacheDirectory() using path_provider
+- [x] Write unit tests for platform service (mock file system where needed)
+- [x] Run project test suite - must pass before task 4
 
 ### Task 4: Photo scanner (Isolate-based)
 
