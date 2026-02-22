@@ -187,9 +187,9 @@ class ScanProvider extends ChangeNotifier {
 
   /// Stops the currently running scan.
   Future<void> stopScan() async {
-    _scanner.stop();
     _scanSubscription?.cancel();
     _scanSubscription = null;
+    _scanner.stop();
     await _pendingBatchInsert;
     _pendingBatchInsert = Future.value();
     _isScanning = false;

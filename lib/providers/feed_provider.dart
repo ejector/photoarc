@@ -22,6 +22,9 @@ class FeedProvider extends ChangeNotifier {
   bool _hasMore = true;
   bool get hasMore => _hasMore;
 
+  int _totalPhotoCount = 0;
+  int get totalPhotoCount => _totalPhotoCount;
+
   int _offset = 0;
 
   // ── Sort state ──────────────────────────────────────────────────────────
@@ -57,6 +60,7 @@ class FeedProvider extends ChangeNotifier {
     _offset = 0;
     _hasMore = true;
     notifyListeners();
+    _totalPhotoCount = await _db.getValidPhotoCount();
     await loadMore();
     await _loadYearMonths();
   }

@@ -482,7 +482,8 @@ Future<bool> _trySipsConvert(String inputPath, String outputPath) async {
 /// Uses heif-convert (libheif) to convert HEIC to JPEG.
 Future<bool> _tryHeifConvert(String inputPath, String outputPath) async {
   try {
-    final result = await Process.run('heif-convert', [inputPath, outputPath]);
+    final result =
+        await Process.run('heif-convert', ['--', inputPath, outputPath]);
     return result.exitCode == 0 && File(outputPath).existsSync();
   } on ProcessException {
     return false;
@@ -668,7 +669,6 @@ class PhotoScanner {
         controller.add(message);
         if (message is ScanCompleteProgress) {
           _cleanup();
-          controller.close();
         }
       }
     });

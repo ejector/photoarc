@@ -71,12 +71,12 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     final feedProvider = context.watch<FeedProvider>();
-    final photoCount = feedProvider.photos.length;
+    final totalCount = feedProvider.totalPhotoCount;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          photoCount > 0 ? 'PhotoFeed ($photoCount photos)' : 'PhotoFeed',
+          totalCount > 0 ? 'PhotoFeed ($totalCount photos)' : 'PhotoFeed',
         ),
         actions: [
           IconButton(
