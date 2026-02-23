@@ -1,4 +1,4 @@
-# PhotoFeed — Desktop Photo Discovery App
+# PhotoArc — Desktop Photo Discovery App
 
 ## Purpose
 
@@ -326,7 +326,7 @@ lib/
 | Default photo dir | `%USERPROFILE%\Pictures` | `~/Pictures` | `~/Pictures` |
 | Long paths | Handle 260 char limit (extended paths) | N/A | N/A |
 | HiDPI | Auto-handled by Flutter | Retina support built-in | Scale factor detection |
-| Thumbnail cache | `%APPDATA%\PhotoFeed\cache\` | `~/Library/Caches/PhotoFeed/` | `~/.cache/PhotoFeed/` |
+| Thumbnail cache | `%APPDATA%\PhotoArc\cache\` | `~/Library/Caches/PhotoArc/` | `~/.cache/PhotoArc/` |
 | RAW support | LibRaw binary bundled | LibRaw binary bundled | LibRaw binary bundled |
 
 ---
@@ -354,7 +354,7 @@ lib/
 - Smooth animations for screen transitions
 - Loading skeleton placeholders for thumbnails while they load
 - Keyboard shortcuts: Escape (close fullscreen), Left/Right arrows (navigate photos), scroll with mouse wheel
-- Window title shows total photo count (e.g., "PhotoFeed — 12,345 photos")
+- Window title shows total photo count (e.g., "PhotoArc — 12,345 photos")
 - Minimum window size: 800×600
 
 ---

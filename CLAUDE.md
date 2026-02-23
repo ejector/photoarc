@@ -1,4 +1,4 @@
-# PhotoFeed - Project Conventions
+# PhotoArc - Project Conventions
 
 ## Build & Run Commands
 

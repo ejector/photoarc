@@ -1,4 +1,4 @@
-# PhotoFeed Desktop App - Implementation Plan
+# PhotoArc Desktop App - Implementation Plan
 
 ## Overview
 
@@ -7,7 +7,7 @@ Build a cross-platform Flutter Desktop app that scans directories for photos, in
 ## Context
 
 - Files involved: Greenfield project - all files will be created from scratch
-- Design spec: PhotoFeedDesign.md (comprehensive spec covering all screens, data model, architecture)
+- Design spec: PhotoArcDesign.md (comprehensive spec covering all screens, data model, architecture)
 - Related patterns: Flutter Desktop, drift (SQLite ORM), provider (state management), Material 3
 - Dependencies: drift, sqlite3_flutter_libs, provider, path_provider, exif, image, file_picker, url_launcher, intl, path
 

@@ -103,11 +103,11 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `PhotoFeedDesign.md` (rename file to `PhotoArcDesign.md`)
 - Modify: `docs/plans/completed/2026-02-22-photofeed-desktop-app.md`
 
-- [ ] Update `README.md` title from `# PhotoFeed` to `# PhotoArc`
-- [ ] Update `CLAUDE.md` header from `# PhotoFeed - Project Conventions` to `# PhotoArc - Project Conventions`
-- [ ] Rename `PhotoFeedDesign.md` to `PhotoArcDesign.md` and update all internal PhotoFeed references
-- [ ] Update title and references in `docs/plans/completed/2026-02-22-photofeed-desktop-app.md`
-- [ ] No test changes needed for docs; run `flutter test` to confirm nothing broke
+- [x] Update `README.md` title from `# PhotoFeed` to `# PhotoArc`
+- [x] Update `CLAUDE.md` header from `# PhotoFeed - Project Conventions` to `# PhotoArc - Project Conventions`
+- [x] Rename `PhotoFeedDesign.md` to `PhotoArcDesign.md` and update all internal PhotoFeed references
+- [x] Update title and references in `docs/plans/completed/2026-02-22-photofeed-desktop-app.md`
+- [x] No test changes needed for docs; run `flutter test` to confirm nothing broke
 
 ### Task 8: Verify acceptance criteria
 

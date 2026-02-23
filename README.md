@@ -1,4 +1,4 @@
-# PhotoFeed
+# PhotoArc
 
 A cross-platform desktop app that scans directories for photos, indexes them into SQLite, and presents them in a scrollable feed with date grouping, full-screen preview, and folder navigation.
 
