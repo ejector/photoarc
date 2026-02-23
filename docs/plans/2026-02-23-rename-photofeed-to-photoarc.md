@@ -80,10 +80,10 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `windows/runner/main.cpp`
 - Modify: `windows/runner/Runner.rc`
 
-- [ ] In `CMakeLists.txt`: change project name and `BINARY_NAME` from `photo_feed_tmp` to `photoarc`
-- [ ] In `main.cpp`: change window title from `"photo_feed_tmp"` to `"PhotoArc"`
-- [ ] In `Runner.rc`: update CompanyName to `com.photoarc`, update FileDescription/InternalName/ProductName to `photoarc`, update OriginalFilename to `photoarc.exe`, update copyright
-- [ ] Run `flutter test` - must pass before task 6
+- [x] In `CMakeLists.txt`: change project name and `BINARY_NAME` from `photo_feed_tmp` to `photoarc`
+- [x] In `main.cpp`: change window title from `"photo_feed_tmp"` to `"PhotoArc"`
+- [x] In `Runner.rc`: update CompanyName to `com.photoarc`, update FileDescription/InternalName/ProductName to `photoarc`, update OriginalFilename to `photoarc.exe`, update copyright
+- [x] Run `flutter test` - must pass before task 6
 
 ### Task 6: Update Linux platform configuration
 
