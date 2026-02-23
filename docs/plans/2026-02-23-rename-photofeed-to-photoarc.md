@@ -111,11 +111,11 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 
 ### Task 8: Verify acceptance criteria
 
-- [ ] Run full test suite: `flutter test`
-- [ ] Run linter: `flutter analyze`
-- [ ] Grep entire project for any remaining `photofeed`, `PhotoFeed`, `photo_feed` references (should find none outside docs/plans/completed and this plan file)
-- [ ] Verify test coverage meets 80%+: `flutter test --coverage`
-- [ ] Manual test: `flutter run -d macos` and confirm window title shows "PhotoArc"
+- [x] Run full test suite: `flutter test`
+- [x] Run linter: `flutter analyze`
+- [x] Grep entire project for any remaining `photofeed`, `PhotoFeed`, `photo_feed` references (should find none outside docs/plans/completed and this plan file)
+- [x] Verify test coverage meets 80%+: `flutter test --coverage`
+- [x] Manual test: `flutter run -d macos` and confirm window title shows "PhotoArc"
 
 ### Task 9: Update documentation
 
