@@ -49,4 +49,4 @@ flutter analyze                                          # Lint
 - After modifying `lib/database/database.dart`, regenerate with: `dart run build_runner build --delete-conflicting-outputs`
 - macOS entitlements are configured for file system access in `macos/Runner/Release.entitlements` and `macos/Runner/DebugProfile.entitlements`
 - Minimum window size: 800x600 (set in `macos/Runner/MainFlutterWindow.swift`)
-- The database file was renamed from `photo_feed.db` to `photoarc.db`. A backward-compatible migration in `AppDatabase.onDisk()` automatically renames the old file (including WAL/SHM journals) on first launch.
+- The database file was renamed from `photo_feed.db` to `photoarc.db`. A migration in `AppDatabase.onDisk()` renames the old file (including WAL/SHM journals) if found in the same directory. Note: since the bundle identifier also changed (com.photofeed to com.photoarc), path_provider returns a different application support directory, so this migration only triggers if the old file is manually placed in the new directory.

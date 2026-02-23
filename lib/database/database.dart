@@ -54,23 +54,34 @@ class AppDatabase extends _$AppDatabase {
   /// Opens an on-disk database at [dbFolder]/photoarc.db.
   /// If photoarc.db does not exist but legacy photo_feed.db does,
   /// renames the old file for backward compatibility.
+  ///
+  /// Note: On macOS/Linux/Windows, path_provider's application support
+  /// directory includes the bundle identifier. Since the bundle ID changed
+  /// (com.photofeed.photoFeedTmp -> com.photoarc.photoarc), this migration
+  /// only triggers if the old file is manually placed in the new directory.
   factory AppDatabase.onDisk(String dbFolder) {
     final newFile = File(p.join(dbFolder, 'photoarc.db'));
     if (!newFile.existsSync()) {
       final oldFile = File(p.join(dbFolder, 'photo_feed.db'));
       if (oldFile.existsSync()) {
+        // Rename main DB file first. If this fails, journals are untouched
+        // and we can cleanly fall back to the old file.
         try {
-          // Rename WAL/SHM journal files first to preserve uncommitted data.
-          for (final suffix in ['-wal', '-shm']) {
+          oldFile.renameSync(newFile.path);
+        } on FileSystemException {
+          return AppDatabase(NativeDatabase.createInBackground(oldFile));
+        }
+        // Main DB renamed successfully; migrate journals (best-effort).
+        // If journal rename fails, SQLite recreates them on next open.
+        for (final suffix in ['-wal', '-shm']) {
+          try {
             final oldJournal = File('${oldFile.path}$suffix');
             if (oldJournal.existsSync()) {
               oldJournal.renameSync('${newFile.path}$suffix');
             }
+          } on FileSystemException {
+            // Orphaned journal is harmless; SQLite will recreate if needed.
           }
-          oldFile.renameSync(newFile.path);
-        } on FileSystemException {
-          // If rename fails (e.g. cross-device), fall back to old file.
-          return AppDatabase(NativeDatabase.createInBackground(oldFile));
         }
       }
     }
