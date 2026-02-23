@@ -59,7 +59,19 @@ class AppDatabase extends _$AppDatabase {
     if (!newFile.existsSync()) {
       final oldFile = File(p.join(dbFolder, 'photo_feed.db'));
       if (oldFile.existsSync()) {
-        oldFile.renameSync(newFile.path);
+        try {
+          // Rename WAL/SHM journal files first to preserve uncommitted data.
+          for (final suffix in ['-wal', '-shm']) {
+            final oldJournal = File('${oldFile.path}$suffix');
+            if (oldJournal.existsSync()) {
+              oldJournal.renameSync('${newFile.path}$suffix');
+            }
+          }
+          oldFile.renameSync(newFile.path);
+        } on FileSystemException {
+          // If rename fails (e.g. cross-device), fall back to old file.
+          return AppDatabase(NativeDatabase.createInBackground(oldFile));
+        }
       }
     }
     return AppDatabase(NativeDatabase.createInBackground(newFile));

@@ -293,6 +293,29 @@ void main() {
       expect(newFile.existsSync(), isTrue);
     });
 
+    test('onDisk renames WAL and SHM journal files alongside main db', () async {
+      final oldFile = File(p.join(tempDir.path, 'photo_feed.db'));
+      oldFile.writeAsStringSync('legacy_data');
+      final oldWal = File(p.join(tempDir.path, 'photo_feed.db-wal'));
+      oldWal.writeAsStringSync('wal_data');
+      final oldShm = File(p.join(tempDir.path, 'photo_feed.db-shm'));
+      oldShm.writeAsStringSync('shm_data');
+
+      final db = AppDatabase.onDisk(tempDir.path);
+      addTearDown(() => db.close());
+
+      expect(oldFile.existsSync(), isFalse);
+      expect(oldWal.existsSync(), isFalse);
+      expect(oldShm.existsSync(), isFalse);
+
+      final newWal = File(p.join(tempDir.path, 'photoarc.db-wal'));
+      final newShm = File(p.join(tempDir.path, 'photoarc.db-shm'));
+      expect(newWal.existsSync(), isTrue);
+      expect(newShm.existsSync(), isTrue);
+      expect(newWal.readAsStringSync(), 'wal_data');
+      expect(newShm.readAsStringSync(), 'shm_data');
+    });
+
     test('onDisk uses photoarc.db when it already exists', () async {
       // Create the new database file.
       final newFile = File(p.join(tempDir.path, 'photoarc.db'));

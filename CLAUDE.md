@@ -49,3 +49,4 @@ flutter analyze                                          # Lint
 - After modifying `lib/database/database.dart`, regenerate with: `dart run build_runner build --delete-conflicting-outputs`
 - macOS entitlements are configured for file system access in `macos/Runner/Release.entitlements` and `macos/Runner/DebugProfile.entitlements`
 - Minimum window size: 800x600 (set in `macos/Runner/MainFlutterWindow.swift`)
+- The database file was renamed from `photo_feed.db` to `photoarc.db`. A backward-compatible migration in `AppDatabase.onDisk()` automatically renames the old file (including WAL/SHM journals) on first launch.
