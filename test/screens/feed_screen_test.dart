@@ -125,7 +125,7 @@ void main() {
       await tester.pumpWidget(_buildTestApp(db: db));
       await tester.pumpAndSettle();
 
-      expect(find.text('PhotoFeed (5 photos)'), findsOneWidget);
+      expect(find.text('PhotoArc (5 photos)'), findsOneWidget);
     });
 
     testWidgets('displays month headers for photo groups', (tester) async {
@@ -205,13 +205,13 @@ void main() {
       expect(find.text('Folder Selection'), findsOneWidget);
     });
 
-    testWidgets('displays PhotoFeed title when no photos', (tester) async {
+    testWidgets('displays PhotoArc title when no photos', (tester) async {
       final db = AppDatabase.inMemory();
 
       await tester.pumpWidget(_buildTestApp(db: db));
       await tester.pumpAndSettle();
 
-      expect(find.text('PhotoFeed'), findsOneWidget);
+      expect(find.text('PhotoArc'), findsOneWidget);
     });
   });
 

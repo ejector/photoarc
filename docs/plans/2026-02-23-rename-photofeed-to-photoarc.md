@@ -41,12 +41,12 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `test/widget_test.dart` (class reference)
 - Modify: `test/screens/feed_screen_test.dart` (test strings and test names)
 
-- [ ] Rename `PhotoFeedApp` class to `PhotoArcApp` in `lib/app.dart`
-- [ ] Change app title from `'PhotoFeed'` to `'PhotoArc'` in `lib/app.dart`
-- [ ] Update `PhotoFeedApp()` reference in `lib/main.dart`
-- [ ] Update `'PhotoFeed ($totalCount photos)'` and `'PhotoFeed'` strings in `lib/screens/feed_screen.dart`
-- [ ] Update `PhotoFeedApp()` reference and test assertions in test files
-- [ ] Run `flutter test` - must pass before task 3
+- [x] Rename `PhotoFeedApp` class to `PhotoArcApp` in `lib/app.dart`
+- [x] Change app title from `'PhotoFeed'` to `'PhotoArc'` in `lib/app.dart`
+- [x] Update `PhotoFeedApp()` reference in `lib/main.dart`
+- [x] Update `'PhotoFeed ($totalCount photos)'` and `'PhotoFeed'` strings in `lib/screens/feed_screen.dart`
+- [x] Update `PhotoFeedApp()` reference and test assertions in test files
+- [x] Run `flutter test` - must pass before task 3
 
 ### Task 3: Update database filename with backward compatibility
 

@@ -30,7 +30,7 @@ void main() async {
           create: (_) => FeedProvider(db: db),
         ),
       ],
-      child: const PhotoFeedApp(),
+      child: const PhotoArcApp(),
     ),
   );
 }

@@ -6,13 +6,13 @@ import 'screens/folder_selection_screen.dart';
 import 'screens/scanning_screen.dart';
 import 'screens/feed_screen.dart';
 
-class PhotoFeedApp extends StatelessWidget {
-  const PhotoFeedApp({super.key});
+class PhotoArcApp extends StatelessWidget {
+  const PhotoArcApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'PhotoFeed',
+      title: 'PhotoArc',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         useMaterial3: true,

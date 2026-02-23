@@ -76,7 +76,7 @@ class _FeedScreenState extends State<FeedScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          totalCount > 0 ? 'PhotoFeed ($totalCount photos)' : 'PhotoFeed',
+          totalCount > 0 ? 'PhotoArc ($totalCount photos)' : 'PhotoArc',
         ),
         actions: [
           IconButton(

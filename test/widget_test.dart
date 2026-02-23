@@ -53,7 +53,7 @@ Widget _buildApp(AppDatabase db) {
         create: (_) => FeedProvider(db: db),
       ),
     ],
-    child: const PhotoFeedApp(),
+    child: const PhotoArcApp(),
   );
 }
 
