@@ -91,9 +91,9 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `linux/CMakeLists.txt`
 - Modify: `linux/runner/my_application.cc`
 
-- [ ] In `CMakeLists.txt`: change `BINARY_NAME` to `photoarc`, change `APPLICATION_ID` to `com.photoarc.photoarc`
-- [ ] In `my_application.cc`: change both window title strings from `"photo_feed_tmp"` to `"PhotoArc"`
-- [ ] Run `flutter test` - must pass before task 7
+- [x] In `CMakeLists.txt`: change `BINARY_NAME` to `photoarc`, change `APPLICATION_ID` to `com.photoarc.photoarc`
+- [x] In `my_application.cc`: change both window title strings from `"photo_feed_tmp"` to `"PhotoArc"`
+- [x] Run `flutter test` - must pass before task 7
 
 ### Task 7: Update documentation
 
