@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:photo_feed/services/thumbnail_cache.dart';
+import 'package:photoarc/services/thumbnail_cache.dart';
 
 Uint8List _bytes(int length) => Uint8List(length);
 

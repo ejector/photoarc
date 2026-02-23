@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:photo_feed/database/database.dart';
-import 'package:photo_feed/services/platform_service.dart';
-import 'package:photo_feed/widgets/photo_fullscreen.dart';
+import 'package:photoarc/database/database.dart';
+import 'package:photoarc/services/platform_service.dart';
+import 'package:photoarc/widgets/photo_fullscreen.dart';
 
 List<Photo> _createTestPhotos(int count) {
   return List.generate(count, (i) {

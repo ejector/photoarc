@@ -1,4 +1,4 @@
-name: photo_feed
+name: photoarc
 description: "A cross-platform desktop app that scans directories for photos and presents them in a scrollable feed."
 publish_to: 'none'
 version: 1.0.0+1

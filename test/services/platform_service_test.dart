@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:photo_feed/services/platform_service.dart';
+import 'package:photoarc/services/platform_service.dart';
 
 void main() {
   group('DriveInfo', () {

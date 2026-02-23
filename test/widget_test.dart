@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
-import 'package:photo_feed/app.dart';
-import 'package:photo_feed/database/database.dart';
-import 'package:photo_feed/providers/feed_provider.dart';
-import 'package:photo_feed/providers/scan_provider.dart';
-import 'package:photo_feed/services/photo_scanner.dart';
-import 'package:photo_feed/services/platform_service.dart';
+import 'package:photoarc/app.dart';
+import 'package:photoarc/database/database.dart';
+import 'package:photoarc/providers/feed_provider.dart';
+import 'package:photoarc/providers/scan_provider.dart';
+import 'package:photoarc/services/photo_scanner.dart';
+import 'package:photoarc/services/platform_service.dart';
 
 class _FakePhotoScanner extends PhotoScanner {
   @override

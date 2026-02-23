@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as p;
-import 'package:photo_feed/services/photo_scanner.dart';
+import 'package:photoarc/services/photo_scanner.dart';
 
 void main() {
   late Directory tempDir;

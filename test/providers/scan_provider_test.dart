@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:photo_feed/database/database.dart';
-import 'package:photo_feed/providers/scan_provider.dart';
-import 'package:photo_feed/services/photo_scanner.dart';
-import 'package:photo_feed/services/platform_service.dart';
+import 'package:photoarc/database/database.dart';
+import 'package:photoarc/providers/scan_provider.dart';
+import 'package:photoarc/services/photo_scanner.dart';
+import 'package:photoarc/services/platform_service.dart';
 
 /// A fake PhotoScanner that emits controllable progress events.
 class FakePhotoScanner extends PhotoScanner {

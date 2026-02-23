@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:photo_feed/widgets/folder_list_tile.dart';
+import 'package:photoarc/widgets/folder_list_tile.dart';
 
 void main() {
   Widget buildTile({

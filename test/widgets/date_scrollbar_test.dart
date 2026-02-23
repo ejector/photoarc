@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:photo_feed/widgets/date_scrollbar.dart';
+import 'package:photoarc/widgets/date_scrollbar.dart';
 
 Widget _buildTestApp({
   required ScrollController controller,

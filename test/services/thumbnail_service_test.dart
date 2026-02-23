@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:photo_feed/services/thumbnail_cache.dart';
-import 'package:photo_feed/services/thumbnail_service.dart';
+import 'package:photoarc/services/thumbnail_cache.dart';
+import 'package:photoarc/services/thumbnail_service.dart';
 
 Uint8List _bytes(List<int> values) => Uint8List.fromList(values);
 

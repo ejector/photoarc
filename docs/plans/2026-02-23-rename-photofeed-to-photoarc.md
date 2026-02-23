@@ -27,10 +27,10 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `pubspec.yaml` (package name `photo_feed` -> `photoarc`)
 - Modify: All files under `test/` (update `package:photo_feed/` -> `package:photoarc/`)
 
-- [ ] Change `name: photo_feed` to `name: photoarc` in `pubspec.yaml`
-- [ ] Update all `import 'package:photo_feed/...'` to `import 'package:photoarc/...'` in every test file
-- [ ] Run `flutter pub get` to validate the package rename
-- [ ] Run `flutter test` - must pass before task 2
+- [x] Change `name: photo_feed` to `name: photoarc` in `pubspec.yaml`
+- [x] Update all `import 'package:photo_feed/...'` to `import 'package:photoarc/...'` in every test file
+- [x] Run `flutter pub get` to validate the package rename
+- [x] Run `flutter test` - must pass before task 2
 
 ### Task 2: Rename class and UI display strings
 
