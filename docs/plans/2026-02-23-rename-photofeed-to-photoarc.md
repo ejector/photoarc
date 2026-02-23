@@ -67,11 +67,11 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `macos/Runner.xcodeproj/project.pbxproj`
 - Modify: `macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme`
 
-- [ ] In `AppInfo.xcconfig`: change `PRODUCT_NAME` to `photoarc`, update `PRODUCT_BUNDLE_IDENTIFIER` to `com.photoarc.photoarc`, update copyright to `com.photoarc`
-- [ ] In `project.pbxproj`: replace all `photo_feed_tmp` references with `photoarc`, update bundle identifiers from `com.photofeed` to `com.photoarc`
-- [ ] In `Runner.xcscheme`: replace `photo_feed_tmp.app` with `photoarc.app`
-- [ ] Run `flutter build macos` or at minimum `flutter analyze` to verify no breakage
-- [ ] Run `flutter test` - must pass before task 5
+- [x] In `AppInfo.xcconfig`: change `PRODUCT_NAME` to `photoarc`, update `PRODUCT_BUNDLE_IDENTIFIER` to `com.photoarc.photoarc`, update copyright to `com.photoarc`
+- [x] In `project.pbxproj`: replace all `photo_feed_tmp` references with `photoarc`, update bundle identifiers from `com.photofeed` to `com.photoarc`
+- [x] In `Runner.xcscheme`: replace `photo_feed_tmp.app` with `photoarc.app`
+- [x] Run `flutter build macos` or at minimum `flutter analyze` to verify no breakage
+- [x] Run `flutter test` - must pass before task 5
 
 ### Task 5: Update Windows platform configuration
 

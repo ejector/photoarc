@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = photo_feed_tmp
+PRODUCT_NAME = photoarc
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.photofeed.photoFeedTmp
+PRODUCT_BUNDLE_IDENTIFIER = com.photoarc.photoarc
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.photofeed. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.photoarc. All rights reserved.
