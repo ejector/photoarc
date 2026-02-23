@@ -51,10 +51,18 @@ class AppSettings extends Table {
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.e);
 
-  /// Opens an on-disk database at [dbFolder]/photo_feed.db.
+  /// Opens an on-disk database at [dbFolder]/photoarc.db.
+  /// If photoarc.db does not exist but legacy photo_feed.db does,
+  /// renames the old file for backward compatibility.
   factory AppDatabase.onDisk(String dbFolder) {
-    final file = File(p.join(dbFolder, 'photo_feed.db'));
-    return AppDatabase(NativeDatabase.createInBackground(file));
+    final newFile = File(p.join(dbFolder, 'photoarc.db'));
+    if (!newFile.existsSync()) {
+      final oldFile = File(p.join(dbFolder, 'photo_feed.db'));
+      if (oldFile.existsSync()) {
+        oldFile.renameSync(newFile.path);
+      }
+    }
+    return AppDatabase(NativeDatabase.createInBackground(newFile));
   }
 
   /// Opens an in-memory database – useful for testing.

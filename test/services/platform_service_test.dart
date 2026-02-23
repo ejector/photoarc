@@ -128,11 +128,11 @@ void main() {
         getDefaultPhotoDirectories: () => [],
         openFileManager: (_) async {},
         getThumbnailCacheDirectory: () async =>
-            '/home/user/.cache/photo_feed/thumbnails',
+            '/home/user/.cache/photoarc/thumbnails',
       );
 
       final cacheDir = await service.getThumbnailCacheDirectory();
-      expect(cacheDir, '/home/user/.cache/photo_feed/thumbnails');
+      expect(cacheDir, '/home/user/.cache/photoarc/thumbnails');
       expect(cacheDir, contains('thumbnails'));
     });
 

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path/path.dart' as p;
 import 'package:photoarc/database/database.dart';
 
 void main() {
@@ -257,6 +260,78 @@ void main() {
       // Pagination works across the large set.
       final page = await db.getPhotosPaginated(limit: 50, offset: 200);
       expect(page.length, 50);
+    });
+  });
+
+  group('Database file migration', () {
+    late Directory tempDir;
+
+    setUp(() {
+      tempDir = Directory.systemTemp.createTempSync('photoarc_test_');
+    });
+
+    tearDown(() {
+      if (tempDir.existsSync()) {
+        tempDir.deleteSync(recursive: true);
+      }
+    });
+
+    test('onDisk renames photo_feed.db to photoarc.db when old file exists',
+        () async {
+      // Create a legacy database file.
+      final oldFile = File(p.join(tempDir.path, 'photo_feed.db'));
+      oldFile.writeAsStringSync('legacy_data');
+
+      final newFile = File(p.join(tempDir.path, 'photoarc.db'));
+      expect(newFile.existsSync(), isFalse);
+
+      final db = AppDatabase.onDisk(tempDir.path);
+      addTearDown(() => db.close());
+
+      // The old file should have been renamed.
+      expect(oldFile.existsSync(), isFalse);
+      expect(newFile.existsSync(), isTrue);
+    });
+
+    test('onDisk uses photoarc.db when it already exists', () async {
+      // Create the new database file.
+      final newFile = File(p.join(tempDir.path, 'photoarc.db'));
+      newFile.writeAsStringSync('new_data');
+
+      final db = AppDatabase.onDisk(tempDir.path);
+      addTearDown(() => db.close());
+
+      // The new file should still exist.
+      expect(newFile.existsSync(), isTrue);
+    });
+
+    test('onDisk does not touch old file when new file already exists',
+        () async {
+      // Both files exist; only photoarc.db should be used.
+      final oldFile = File(p.join(tempDir.path, 'photo_feed.db'));
+      oldFile.writeAsStringSync('old_data');
+      final newFile = File(p.join(tempDir.path, 'photoarc.db'));
+      newFile.writeAsStringSync('new_data');
+
+      final db = AppDatabase.onDisk(tempDir.path);
+      addTearDown(() => db.close());
+
+      // Both files still present; old file untouched.
+      expect(oldFile.existsSync(), isTrue);
+      expect(newFile.existsSync(), isTrue);
+      expect(oldFile.readAsStringSync(), 'old_data');
+    });
+
+    test('onDisk creates new db when neither file exists', () async {
+      final newFile = File(p.join(tempDir.path, 'photoarc.db'));
+      expect(newFile.existsSync(), isFalse);
+
+      final db = AppDatabase.onDisk(tempDir.path);
+      addTearDown(() => db.close());
+
+      // Trigger a query to force the background isolate to open/create the file.
+      await db.getValidPhotoCount();
+      expect(newFile.existsSync(), isTrue);
     });
   });
 }

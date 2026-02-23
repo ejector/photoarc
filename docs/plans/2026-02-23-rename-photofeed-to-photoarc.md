@@ -54,11 +54,11 @@ Rename all references from "PhotoFeed" / "photo_feed" to "PhotoArc" / "photoarc"
 - Modify: `lib/database/database.dart` (filename `photo_feed.db` -> `photoarc.db`, add fallback)
 - Modify: `test/services/platform_service_test.dart` (cache path strings if they reference photo_feed)
 
-- [ ] Change database filename from `photo_feed.db` to `photoarc.db` in `lib/database/database.dart`
-- [ ] Add a check before opening: if `photoarc.db` does not exist but `photo_feed.db` does, rename the old file to the new name (one-time migration)
-- [ ] Update comment referencing the old filename
-- [ ] Update any test strings that reference `photo_feed` in cache/path contexts
-- [ ] Run `flutter test` - must pass before task 4
+- [x] Change database filename from `photo_feed.db` to `photoarc.db` in `lib/database/database.dart`
+- [x] Add a check before opening: if `photoarc.db` does not exist but `photo_feed.db` does, rename the old file to the new name (one-time migration)
+- [x] Update comment referencing the old filename
+- [x] Update any test strings that reference `photo_feed` in cache/path contexts
+- [x] Run `flutter test` - must pass before task 4
 
 ### Task 4: Update macOS platform configuration
 
